@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tìm đối</title>
+    <link rel="icon" type="image/x-icon" href="P:/SoccerFieldManagement/assets/images/ball2.png">
+    <link rel="stylesheet" href="P:/SoccerFieldManagement/assets/css/user.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+</head>
+<body class="body-opponent">
+    <!-- Thanh dieu huong -->
+    <nav>
+        <ul class="navbar">
+            <li><a href="P:/SoccerFieldManagement/user/index.html"><i class="fas fa-home" style="margin-right: 8px"></i>Trang chủ</a></li>
+            <li><a href="P:/SoccerFieldManagement/user/booking.html">Đặt sân</a></li>
+            <li><a href="P:/SoccerFieldManagement/user/opponent.html">Tìm đối</a></li>
+            <li><a href="P:/SoccerFieldManagement/user/services.html">Dịch vụ</a></li>
+        </ul>
+    </nav>
+
+    <!-- Thanh search -->
+    <div class="search-container">
+        <form class="search-form">
+            <input type="text" placeholder="Tìm đối ngay hôm nay..." class="search-input" required>
+            <button type="submit" class="search-button"><img src="P:/SoccerFieldManagement/assets/images/search.png" alt="search"></button>
+        </form>
+    </div>
+
+    <!-- Phần bài đăng tìm đối -->
+    <div class="post-container">
+        <!-- Các post sẽ được tạo động bằng JavaScript -->
+    </div>
+
+    <!-- Phần đăng kí tìm đối -->
+     <div class="register-container">
+        <div class="register-logo">
+            <img src="P:/SoccerFieldManagement/assets/images/foxNoBG1.png" alt="fox">
+        </div>
+
+        <div class="register-text">
+            <p>Nếu bạn chưa tìm được đối,<br> hãy đăng kí tìm đối ngay thôi!!!</p>
+        </div>
+
+        <button class="register-button" id="openRegisterForm">
+            <p>Đăng ký tìm đối</p>
+        </button>
+     </div>
+
+     <!-- Form đăng ký tìm đối -->
+     <div class="register-overlay" id="registerOverlay">
+        <div class="register-form">
+            <div class="form-header">
+                <h2>Đăng Ký Tìm Đối</h2>
+                <button class="close-form-btn" id="closeRegisterBtn">&times;</button>
+            </div>
+            <div class="form-content">
+                <div class="form-group">
+                    <label for="teamName">Tên đội/nhóm:</label>
+                    <input type="text" id="teamName" placeholder="Nhập tên đội hoặc nhóm của bạn" required>
+                    <span class="error-message" id="teamNameError"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="memberCount">Số lượng thành viên:</label>
+                    <input type="number" id="memberCount" min="1" max="20" value="5" required>
+                    <span class="error-message" id="memberCountError"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="matchType">Hình thức:</label>
+                    <select id="matchType" required>
+                        <option value="">-- Chọn hình thức --</option>
+                        <option value="Nam">Nam</option>
+                        <option value="Nữ">Nữ</option>
+                    </select>
+                    <span class="error-message" id="matchTypeError"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="skillLevel">Trình độ:</label>
+                    <select id="skillLevel" required>
+                        <option value="">-- Chọn trình độ --</option>
+                        <option value="Mới chơi">Mới chơi</option>
+                        <option value="Trung bình">Trung bình</option>
+                        <option value="Khá">Khá</option>
+                        <option value="Giỏi">Giỏi</option>
+                        <option value="Chuyên nghiệp">Chuyên nghiệp</option>
+                    </select>
+                    <span class="error-message" id="skillLevelError"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="matchTime">Thời gian:</label>
+                    <input type="datetime-local" id="matchTime" required>
+                    <span class="error-message" id="matchTimeError"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phoneNumber">Số điện thoại:</label>
+                    <input type="tel" id="phoneNumber" placeholder="Nhập số điện thoại liên hệ" required>
+                    <span class="error-message" id="phoneNumberError"></span>
+                </div>
+                
+                <div class="form-group full-width">
+                    <label>Sân (tùy chọn):</label>
+                    <div class="field-selection">
+                        <div class="field-option" data-field="none">
+                            <input type="radio" id="fieldNone" name="field" value="none" checked>
+                            <label for="fieldNone">Không chọn sân</label>
+                        </div>
+                        <div class="field-option" data-field="A">
+                            <input type="radio" id="fieldA" name="field" value="A">
+                            <label for="fieldA">Sân A</label>
+                        </div>
+                        <div class="field-option" data-field="B">
+                            <input type="radio" id="fieldB" name="field" value="B">
+                            <label for="fieldB">Sân B</label>
+                        </div>
+                        <div class="field-option" data-field="C">
+                            <input type="radio" id="fieldC" name="field" value="C">
+                            <label for="fieldC">Sân C</label>
+                        </div>
+                        <div class="field-option" data-field="D">
+                            <input type="radio" id="fieldD" name="field" value="D">
+                            <label for="fieldD">Sân D</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="postPassword">Mã tạo bài:</label>
+                    <input type="password" id="postPassword" placeholder="Mật khẩu quản lý bài đăng" required>
+                    <span class="error-message" id="postPasswordError"></span>
+                </div>
+                
+                <div class="form-group full-width">
+                    <label for="postDescription">Mô tả:</label>
+                    <textarea id="postDescription" rows="3" placeholder="Mô tả tổng quan về mong muốn của bạn..." required></textarea>
+                    <span class="error-message" id="postDescriptionError"></span>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" id="cancelRegister">Hủy</button>
+                    <button type="button" class="btn-confirm" id="confirmRegister">Đăng ký</button>
+                </div>
+            </div>
+        </div>
+     </div>
+
+     <!-- Form chi tiết bài đăng -->
+     <div class="post-detail-overlay" id="postDetailOverlay">
+        <div class="post-detail-form">
+            <div class="form-header">
+                <h2>Chi Tiết Bài Đăng</h2>
+                <button class="close-form-btn" id="closeDetailBtn">&times;</button>
+            </div>
+            <div class="form-content">
+                <!-- Mô tả bài đăng -->
+                <div class="form-group full-width">
+                    <label>Mô tả:</label>
+                    <div class="post-description-detail"></div>
+                </div>
+                
+                <!-- Thông tin chi tiết -->
+                <div class="form-group full-width">
+                    <label>Thông tin chi tiết:</label>
+                    <div class="post-info-table">
+                        <div class="info-row">
+                            <div class="info-label">Tên đội/nhóm:</div>
+                            <div class="info-value" id="detailTeamName"></div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Số lượng thành viên:</div>
+                            <div class="info-value" id="detailMemberCount"></div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Hình thức:</div>
+                            <div class="info-value" id="detailMatchType"></div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Trình độ:</div>
+                            <div class="info-value" id="detailSkillLevel"></div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Thời gian:</div>
+                            <div class="info-value" id="detailMatchTime"></div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Sân:</div>
+                            <div class="info-value" id="detailField"></div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Số điện thoại:</div>
+                            <div class="info-value" id="detailPhoneNumber"></div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">Ngày đăng:</div>
+                            <div class="info-value" id="detailCreateDate"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Phần xóa bài đăng -->
+                <div class="form-group full-width post-delete-section">
+                    <label>Quản lý bài đăng:</label>
+                    <div class="delete-post-form">
+                        <input type="password" id="deletePostPassword" placeholder="Vui lòng nhập mật khẩu bài đăng để xóa">
+                        <button type="button" class="btn-delete" id="deletePostBtn">Xóa</button>
+                    </div>
+                    <div class="error-message" id="deletePostError"></div>
+                </div>
+                
+                <div class="form-actions-delete">
+                    <button type="button" class="btn-cancel" id="closePostDetail">Đóng</button>
+                </div>
+            </div>
+        </div>
+     </div>
+
+     <script src="P:/SoccerFieldManagement/assets/js/main.js"></script>
+</body>
+</html>

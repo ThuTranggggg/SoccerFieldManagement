@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dịch vụ</title>
+    <link rel="icon" type="image/x-icon" href="P:/SoccerFieldManagement/assets/images/ball2.png">
+    <link rel="stylesheet" href="P:/SoccerFieldManagement/assets/css/user.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="body-services">
+    <!-- Thanh dieu huong -->
+    <nav>
+        <ul class="navbar">
+            <li><a href="P:/SoccerFieldManagement/user/index.html"><i class="fas fa-home" style="margin-right: 8px"></i>Trang chủ</a></li>
+            <li><a href="P:/SoccerFieldManagement/user/booking.html">Đặt sân</a></li>
+            <li><a href="P:/SoccerFieldManagement/user/opponent.html">Tìm đối</a></li>
+            <li><a href="P:/SoccerFieldManagement/user/services.html">Dịch vụ</a></li>
+        </ul>
+    </nav>
+
+    <!-- Tag gọi đồ -->
+     <button class="tag-container" id="eat-btn">
+        <div class="tag-text">Gọi đồ</div>
+        <div class="tag-icon"><i class="fas fa-utensils"></i></div>
+     </button>
+
+     <!-- Tag thuê đồ -->
+     <button class="tag-container" id="wear-btn">
+        <div class="tag-text">Thuê đồ</div>
+        <div class="tag-icon-02"><i class="fas fa-futbol"></i></div>
+     </button>
+
+     <!-- Tag giỏ hàng -->
+     <button class="tag-container" id="cart-btn">   
+          <div class="tag-icon-03"><i class="fas fa-shopping-cart" style="font-size: 30px;"></i></div>
+     </button>
+
+    <!-- Gian hàng gọi đồ ăn uống -->
+    <div class="services-container" id="eat-page"></div>
+
+    <!-- Nút chuyển trang -->
+    <div class="pagination-container">
+        <button class="pagination-button up-button">
+          <i class="arrow up"></i>
+        </button>
+        <div class="page-number">1</div>
+        <button class="pagination-button down-button">
+          <i class="arrow down"></i>
+        </button>
+      </div>
+
+    <!-- Phần thuê đồ - trang phục -->
+     <div class="services-container" id="wear-page"></div>
+
+     <!-- Nút chuyển trang -->
+     <div class="pagination-container-02">
+        <button class="pagination-button up-button">
+          <i class="arrow up"></i>
+        </button>
+        <div class="page-number">1</div>
+        <button class="pagination-button down-button">
+          <i class="arrow down"></i>
+        </button>
+      </div>
+
+      <!-- Giỏ hàng -->
+      <div class="cart-container" id="cart-page">
+        <!-- 1. Phần tiêu đề -->
+        <div class="form-header">
+          <h2>Giỏ hàng</h2>
+          <button class="close-form-btn" id="close-cart">&times;</button>
+        </div>
+        
+        <!-- 2. Phần hiển thị sản phẩm -->
+        <div class="cart-products-section">
+          <h3>Sản phẩm đã chọn</h3>
+          <div class="product-list">
+            <!-- Sản phẩm sẽ được thêm vào đây bằng JavaScript -->
+          </div>
+        </div>
+        
+        <!-- 3. Phần thông tin khách hàng -->
+        <div class="customer-info-section">
+          <h3>Thông tin khách hàng</h3>
+          <div class="customer-form">
+            <div class="customer-info-row">
+              <div class="form-group">
+                <input type="text" id="customer-name" placeholder="Nhập họ và tên">
+                <span class="error-message" id="customerNameError"></span>
+              </div>
+              <div class="form-group">
+                <input type="tel" id="customer-phone" placeholder="Nhập số điện thoại">
+                <span class="error-message" id="customerPhoneError"></span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Địa điểm phục vụ</label>
+              <div class="location-options">
+                <div class="location-button" data-value="Sân A">Sân A</div>
+                <div class="location-button" data-value="Sân B">Sân B</div>
+                <div class="location-button" data-value="Sân C">Sân C</div>
+                <div class="location-button" data-value="Sân D">Sân D</div>
+                <div class="location-button" data-value="Tại quầy">Tại quầy</div>
+                <input type="hidden" id="selected-location" value="">
+              </div>
+              <span class="error-message" id="locationError"></span>
+            </div>
+            <div class="form-group">
+              <label for="bookingNote">Ghi chú:</label>
+              <textarea id="bookingNote" rows="3" placeholder="Thêm yêu cầu đặc biệt (nếu có)"></textarea>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 4. Phần thanh toán -->
+        <div class="payment-section">
+          <div class="payment-container">
+            <div class="payment-summary">
+              <div class="summary-item">
+                <span>Tổng số lượng:</span>
+                <span id="total-quantity">0</span>
+              </div>
+              <div class="summary-item total-price">
+                <span>Tổng thanh toán:</span>
+                <span id="total-price">0₫</span>
+              </div>
+            </div>
+            <button class="payment-button">Thanh toán</button>
+          </div>
+        </div>
+      </div>
+
+          <!-- Form QR thanh toán -->
+      <div class="cart-qr-overlay" id="cart-qr-Overlay">
+        <div class="qr-payment-form">
+          <button class="close-form-btn" id="closeQrBtn">&times;</button>
+          <h2>Mã QR thanh toán</h2>
+          <p>Họ và tên chủ tài khoản:<b>&nbsp;NGUYEN THU TRANG</b></p>
+          <p>Ngân hàng:<b>&nbsp;MB Bank</b></p>
+          <p>Số tài khoản:<b>&nbsp;0382 802 842</b></p>
+          <div class="cart-qr-code"><img src="../assets/images/qr.png" alt="QR code"></div>
+        </div>
+      </div>
+      <div class="cart-overlay"></div>
+
+      <script src="P:/SoccerFieldManagement/assets/js/main.js"></script>
+</body>
+</html>
