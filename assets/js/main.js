@@ -1061,6 +1061,7 @@ function initializeServices() {
     setupCart();
 }
 
+// Phân trang gọi đồ ăn uống
 function setupPaginationEat() {
     const eatPage = document.getElementById('eat-page');
 
@@ -1349,6 +1350,7 @@ function setupPaginationEat() {
     });
 }
 
+// Phân trang thuê đồ
 function setupPaginationWear() {
     const wearPage = document.getElementById('wear-page');
 
@@ -1621,18 +1623,6 @@ function updateCartDisplay() {
     // Xóa nội dung cũ
     productList.innerHTML = '';
     
-    // Kiểm tra nếu giỏ hàng trống
-    // if (cartData.length === 0) {
-    //     const emptyCart = document.createElement('div');
-    //     emptyCart.className = 'empty-cart';
-    //     emptyCart.textContent = 'Giỏ hàng trống';
-    //     productList.appendChild(emptyCart);
-        
-    //     totalQuantityElem.textContent = '0';
-    //     totalPriceElem.textContent = '0₫';
-    //     return;
-    // }
-    
     // Biến lưu tổng số lượng và tổng tiền
     let totalQuantity = 0;
     let totalPrice = 0;
@@ -1795,6 +1785,7 @@ function setupCart() {
             cartOverlay.style.display = 'block';
             cartBtn.classList.add('active');
         } else {
+            // Thông báo "Vui lòng thêm sản phẩm vào giỏ hàng!"
             const alertAddProduct = document.createElement('div');
             alertAddProduct.className = 'alert-add-product';
 
@@ -1893,6 +1884,7 @@ function setupCart() {
             if (isValid) {
                 // Hiển thị mã QR
                 const cartQR = document.getElementById('cart-qr-Overlay');
+                const cartOverlay = document.querySelector('.cart-overlay');
                 // Cập nhật URL của mã QR với giá tiền thực tế
                 const cartQRCodeImg = document.querySelector('.cart-qr-code img');
                 const totalPrice = document.getElementById('total-price').textContent.replace(/\D/g, '');
@@ -1905,9 +1897,9 @@ function setupCart() {
                     console.log("Setting QR URL to:", qrUrl);
                     cartQRCodeImg.src = qrUrl;
                 }
-                cartQR.style.display = 'block';
-                const cartOverlay = document.querySelector('.cart-overlay');
+
                 cartOverlay.style.display = 'block';
+                cartQR.style.display = 'block';
                 // Xóa giỏ hàng sau khi thanh toán
                 cartData = [];
                 updateCartDisplay();
@@ -1915,11 +1907,11 @@ function setupCart() {
                 const closeQrBtn = document.getElementById('closeQrBtn');
                 closeQrBtn.addEventListener('click', function() {
                     cartQR.style.display = 'none';
+                    cartOverlay.style.display = 'none';
                 });
 
                 // Đóng form giỏ hàng
                 cartPage.classList.remove('show');
-                cartOverlay.style.display = 'none';
                 cartBtn.classList.remove('active');
                 
                 // Reset form

@@ -1567,10 +1567,13 @@ th.today {
 
 .product-list {
     overflow-y: auto;
-    max-height: 200px;
+    max-height: 210px;
     border: 1px solid #e0e0e0;
     border-radius: 5px;
     padding: 0px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .product-item {
@@ -1676,16 +1679,14 @@ th.today {
 }
 
 .customer-form {
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
-    padding: 15px;
+    padding: 10px;
 }
 
 /* Thêm Row cho họ tên và số điện thoại */
 .customer-info-row {
     display: flex;
     gap: 15px;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .customer-info-row .form-group {
@@ -1694,7 +1695,7 @@ th.today {
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .form-group:last-child {
@@ -1813,7 +1814,7 @@ th.today {
 .cart-qr-overlay{
     position: fixed;
     top: 100px;
-    left: 400px;
+    left: 450px;
     width: 100%;
     height: 100%;
     display: none;
@@ -1861,12 +1862,6 @@ th.today {
     justify-content: center;
     align-items: center;
     color: #d84a02;
-}
-
-.product-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
 }
 
 .form-group textarea {
