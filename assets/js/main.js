@@ -1899,7 +1899,7 @@ function setupCart() {
                 }
 
                 cartOverlay.style.display = 'block';
-                cartQR.style.display = 'block';
+                cartQR.style.display = 'block';  
                 // Xóa giỏ hàng sau khi thanh toán
                 cartData = [];
                 updateCartDisplay();
