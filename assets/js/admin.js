@@ -14,6 +14,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (currentPage.includes('bookingStats.html')) {
             initializeBookingCalendar();
         }
+        if (currentPage.includes('serviceStats.html')) {
+            initializeServiceTable();
+        }
+        if (currentPage.includes('saleStats.html')) {
+            initializeSaleTable();
+        }
     }
 
     // Dropdown menu
@@ -106,7 +112,6 @@ function highlightActiveNavItem() {
 }
 
 // bookingStats.html
-// booking.html
 //Khởi tạo ngày T2 đầu tuần hiện tại
 let currentWeekStart = new Date();
 currentWeekStart.setDate(currentWeekStart.getDate() - currentWeekStart.getDay() + 1); // Set to Monday of current week
@@ -291,3 +296,353 @@ function generateBookingTable() {
     table.appendChild(tbody);
     tableContainer.appendChild(table);
 }
+
+// serviceStats.html
+function initializeServiceTable() {
+    generateEatTable();
+    generateWearTable();
+    setupTagService();
+}
+
+// Tạo bảng quản lý sản phẩm đồ ăn
+let eatData = [
+    { name: "Cơm gà xối mỡ", importPrice: Math.floor(35000 * getRandomNumber(70, 90) / 100), price: 35000, image: "assets/images/meal.png", stock: getRandomNumber(10, 100), sold: 0 },
+    { name: "Bún chả", importPrice: Math.floor(30000 * getRandomNumber(70, 90) / 100), price: 30000, image: "assets/images/meal.png", stock: getRandomNumber(10, 100), sold: 0 },
+    { name: "Phở bò tái nạm", importPrice: Math.floor(40000 * getRandomNumber(70, 90) / 100), price: 40000, image: "assets/images/meal.png", stock: getRandomNumber(10, 100), sold: 0 },
+    { name: "Bánh mì thịt nguội", importPrice: Math.floor(25000 * getRandomNumber(70, 90) / 100), price: 25000, image: "assets/images/meal.png", stock: getRandomNumber(10, 100), sold: 0 },
+    { name: "Cơm rang dưa bò", importPrice: Math.floor(30000 * getRandomNumber(70, 90) / 100), price: 30000, image: "assets/images/meal.png", stock: getRandomNumber(10, 100), sold: 0 },
+    { name: "Bún bò Huế", importPrice: Math.floor(35000 * getRandomNumber(70, 90) / 100), price: 35000, image: "assets/images/meal.png", stock: getRandomNumber(10, 100), sold: 0 },
+    { name: "Mỳ xào hải sản", importPrice: Math.floor(38000 * getRandomNumber(70, 90) / 100), price: 38000, image: "assets/images/meal.png", stock: getRandomNumber(10, 100), sold: 0 },
+    { name: "Cà phê đen đá", importPrice: Math.floor(12000 * getRandomNumber(70, 90) / 100), price: 12000, image: "assets/images/meal.png", stock: getRandomNumber(10, 100), sold: 0 },
+    { name: "Cà phê sữa đá", importPrice: Math.floor(15000 * getRandomNumber(70, 90) / 100), price: 15000, image: "assets/images/meal.png", stock: getRandomNumber(10, 100), sold: 0 },
+    { name: "Trà chanh", importPrice: Math.floor(10000 * getRandomNumber(70, 90) / 100), price: 10000, image: "assets/images/meal.png", stock: getRandomNumber(10, 100), sold: 0 },
+    { name: "Trà đào cam sả", importPrice: Math.floor(18000 * getRandomNumber(70, 90) / 100), price: 18000, image: "assets/images/meal.png", stock: getRandomNumber(10, 100), sold: 0 },
+    { name: "Nước ép cam tươi", importPrice: Math.floor(20000 * getRandomNumber(70, 90) / 100), price: 20000, image: "assets/images/meal.png", stock: getRandomNumber(10, 100), sold: 0 },
+    { name: "Sinh tố bơ", importPrice: Math.floor(25000 * getRandomNumber(70, 90) / 100), price: 25000, image: "assets/images/meal.png", stock: getRandomNumber(10, 100), sold: 0 },
+    { name: "Bánh flan", importPrice: Math.floor(10000 * getRandomNumber(70, 90) / 100), price: 10000, image: "assets/images/meal.png", stock: getRandomNumber(10, 100), sold: 0 },
+    { name: "Chè đậu xanh", importPrice: Math.floor(15000 * getRandomNumber(70, 90) / 100), price: 15000, image: "assets/images/meal.png", stock: getRandomNumber(10, 100), sold: 0 },
+    { name: "Xôi gà", importPrice: Math.floor(25000 * getRandomNumber(70, 90) / 100), price: 25000, image: "assets/images/meal.png", stock: getRandomNumber(10, 100), sold: 0 },
+    { name: "Bánh cuốn nóng", importPrice: Math.floor(20000 * getRandomNumber(70, 90) / 100), price: 20000, image: "assets/images/meal.png", stock: getRandomNumber(10, 100), sold: 0 },
+    { name: "Miến trộn", importPrice: Math.floor(25000 * getRandomNumber(70, 90) / 100), price: 25000, image: "assets/images/meal.png", stock: getRandomNumber(10, 100), sold: 0 },
+    { name: "Cơm sườn chua ngọt", importPrice: Math.floor(35000 * getRandomNumber(70, 90) / 100), price: 35000, image: "assets/images/meal.png", stock: getRandomNumber(10, 100), sold: 0 },
+    { name: "Bún đậu mắm tôm", importPrice: Math.floor(35000 * getRandomNumber(70, 90) / 100), price: 35000, image: "assets/images/meal.png", stock: getRandomNumber(10, 100), sold: 0 },
+    { name: "Cháo gà", importPrice: Math.floor(25000 * getRandomNumber(70, 90) / 100), price: 25000, image: "assets/images/meal.png", stock: getRandomNumber(10, 100), sold: 0 },
+    { name: "Nem chua rán", importPrice: Math.floor(15000 * getRandomNumber(70, 90) / 100), price: 15000, image: "assets/images/meal.png", stock: getRandomNumber(10, 100), sold: 0 },
+    { name: "Sữa chua nếp cẩm", importPrice: Math.floor(18000 * getRandomNumber(70, 90) / 100), price: 18000, image: "assets/images/meal.png", stock: getRandomNumber(10, 100), sold: 0 },
+    { name: "Chè thái", importPrice: Math.floor(20000 * getRandomNumber(70, 90) / 100), price: 20000, image: "assets/images/meal.png", stock: getRandomNumber(10, 100), sold: 0 },
+    { name: "Lẩu tự chọn (1 người)", importPrice: Math.floor(70000 * getRandomNumber(70, 90) / 100), price: 70000, image: "assets/images/meal.png", stock: getRandomNumber(10, 100), sold: 0 },
+    { name: "Nước ngọt các loại", importPrice: Math.floor(12000 * getRandomNumber(70, 90) / 100), price: 12000, image: "assets/images/meal.png", stock: getRandomNumber(10, 100), sold: 0 },
+    { name: "Bánh mì trứng", importPrice: Math.floor(15000 * getRandomNumber(70, 90) / 100), price: 15000, image: "assets/images/meal.png", stock: getRandomNumber(10, 100), sold: 0 }
+];
+function generateEatTable() {
+    const tableContainer = document.querySelector('.eat-table-container');
+    if (!tableContainer) return;
+    tableContainer.innerHTML = '';
+
+    const table = document.createElement('table');
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+
+    thead.classList.add('eat-table-header');
+
+    const headers = ['STT', 'Tên sản phẩm', 'Ảnh minh họa','Giá nhập', 'Giá bán', 'Đã bán', 'Số lượng tồn kho'];
+
+    headers.forEach((item) => {
+        const itemHeader = document.createElement('th');
+        itemHeader.textContent = item;
+        headerRow.appendChild(itemHeader);
+    });
+
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+    tableContainer.appendChild(table);
+    
+    const tbody = document.createElement('tbody');
+
+    // Gán giá trị ngẫu nhiên cho sold từ 0 đến stock
+    eatData.forEach(item => {
+        item.sold = getRandomNumber(0, item.stock);
+    });
+
+    eatData.forEach((item, index) => {
+        const row = document.createElement('tr');
+        // STT
+        const sttCell = document.createElement('td');
+        sttCell.textContent = index + 1;
+        row.appendChild(sttCell);
+        
+        // Tên sản phẩm
+        const nameCell = document.createElement('td');
+        nameCell.textContent = item.name;
+        row.appendChild(nameCell);
+
+        // Ảnh minh họa
+        const imageCell = document.createElement('td'); 
+        const image = document.createElement('img');
+        image.src = item.image;
+        image.alt = item.name;
+        image.classList.add('service-image');
+        imageCell.appendChild(image);
+        row.appendChild(imageCell);
+
+        // Giá nhập 
+        const importPriceCell = document.createElement('td');
+        importPriceCell.textContent = item.importPrice;
+        row.appendChild(importPriceCell);
+
+        // Giá bán
+        const priceCell = document.createElement('td');
+        priceCell.textContent = item.price;
+        row.appendChild(priceCell);
+
+        // Đã bán
+        const soldCell = document.createElement('td');
+        soldCell.textContent = item.sold;
+        row.appendChild(soldCell);
+
+        // Số lượng tồn kho
+        const stockCell = document.createElement('td');
+        stockCell.textContent = item.stock;
+        row.appendChild(stockCell);
+
+        tbody.appendChild(row);
+    })
+
+    table.appendChild(tbody);
+    tableContainer.appendChild(table);
+}
+
+// Hàm tạo ngẫu nhiên số lượng tồn kho cho sản phẩm
+function getRandomNumber(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// Tạo bảng quản lý sản phẩm trang phục
+let wearData = [
+        { name: "Áo đấu Manchester United 2025 Home", importPrice: Math.floor(1200000 * getRandomNumber(70, 90) / 100), price: 1200000, image: "assets/images/jersey.png", stock: getRandomNumber(10, 100), sold: 0 },
+        { name: "Áo đấu Real Madrid 2025 Away", importPrice: Math.floor(1300000 * getRandomNumber(70, 90) / 100), price: 1300000, image: "assets/images/jersey.png", stock: getRandomNumber(10, 100), sold: 0 },
+        { name: "Áo đấu Barcelona 2025 Third", importPrice: Math.floor(1250000 * getRandomNumber(70, 90) / 100), price: 1250000, image: "assets/images/jersey.png", stock: getRandomNumber(10, 100), sold: 0 },
+        { name: "Quần short Adidas Performance", importPrice: Math.floor(450000 * getRandomNumber(70, 90) / 100), price: 450000, image: "assets/images/shorts.png", stock: getRandomNumber(10, 100), sold: 0 },
+        { name: "Giày Nike Mercurial Vapor 15", importPrice: Math.floor(2500000 * getRandomNumber(70, 90) / 100), price: 2500000, image: "assets/images/boots.png", stock: getRandomNumber(10, 100), sold: 0 },
+        { name: "Giày Adidas Predator Freak", importPrice: Math.floor(2400000 * getRandomNumber(70, 90) / 100), price: 2400000, image: "assets/images/boots.png", stock: getRandomNumber(10, 100), sold: 0 },
+        { name: "Tất Nike Grip Strike", importPrice: Math.floor(200000 * getRandomNumber(70, 90) / 100), price: 200000, image: "assets/images/socks.png", stock: getRandomNumber(10, 100), sold: 0 },
+        { name: "Áo khoác tập luyện Puma", importPrice: Math.floor(900000 * getRandomNumber(70, 90) / 100), price: 900000, image: "assets/images/jacket.png", stock: getRandomNumber(10, 100), sold: 0 },
+        { name: "Áo đấu Liverpool 2025 Home", importPrice: Math.floor(1250000 * getRandomNumber(70, 90) / 100), price: 1250000, image: "assets/images/jersey.png", stock: getRandomNumber(10, 100), sold: 0 },
+        { name: "Quần dài tập luyện Nike", importPrice: Math.floor(700000 * getRandomNumber(70, 90) / 100), price: 700000, image: "assets/images/pants.png", stock: getRandomNumber(10, 100), sold: 0 },
+        { name: "Giày Puma Ultra 3.4", importPrice: Math.floor(2200000 * getRandomNumber(70, 90) / 100), price: 2200000, image: "assets/images/boots.png", stock: getRandomNumber(10, 100), sold: 0 },
+        { name: "Áo đấu PSG 2025 Away", importPrice: Math.floor(1300000 * getRandomNumber(70, 90) / 100), price: 1300000, image: "assets/images/jersey.png", stock: getRandomNumber(10, 100), sold: 0 },
+        { name: "Băng bảo vệ đầu gối Adidas", importPrice: Math.floor(300000 * getRandomNumber(70, 90) / 100), price: 300000, image: "assets/images/kneepad.png", stock: getRandomNumber(10, 100), sold: 0 },
+        { name: "Găng tay thủ môn Nike", importPrice: Math.floor(800000 * getRandomNumber(70, 90) / 100), price: 800000, image: "assets/images/gloves.png", stock: getRandomNumber(10, 100), sold: 0 },
+        { name: "Áo đấu Bayern Munich 2025 Third", importPrice: Math.floor(1350000 * getRandomNumber(70, 90) / 100), price: 1350000, image: "assets/images/jersey.png", stock: getRandomNumber(10, 100), sold: 0 },
+        { name: "Tất dài Adidas AdiSock", importPrice: Math.floor(180000 * getRandomNumber(70, 90) / 100), price: 180000, image: "assets/images/socks.png", stock: getRandomNumber(10, 100), sold: 0 },
+        { name: "Áo giữ nhiệt Under Armour", importPrice: Math.floor(600000 * getRandomNumber(70, 90) / 100), price: 600000, image: "assets/images/base.png", stock: getRandomNumber(10, 100), sold: 0 },
+        { name: "Giày Adidas X Speedflow", importPrice: Math.floor(2300000 * getRandomNumber(70, 90) / 100), price: 2300000, image: "assets/images/boots.png", stock: getRandomNumber(10, 100), sold: 0 },
+        { name: "Áo đấu Chelsea 2025 Home", importPrice: Math.floor(1250000 * getRandomNumber(70, 90) / 100), price: 1250000, image: "assets/images/jersey.png", stock: getRandomNumber(10, 100), sold: 0 },
+        { name: "Quần short Nike Pro", importPrice: Math.floor(400000 * getRandomNumber(70, 90) / 100), price: 400000, image: "assets/images/shorts.png", stock: getRandomNumber(10, 100), sold: 0 }
+    ];
+function generateWearTable() {
+    const tableContainer = document.querySelector('.wear-table-container');
+    if (!tableContainer) return;
+    tableContainer.innerHTML = '';
+
+    const table = document.createElement('table');
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+
+    thead.classList.add('wear-table-header');
+
+    const headers = ['STT', 'Tên sản phẩm', 'Ảnh minh họa', 'Giá nhập', 'Giá bán', 'Đã bán', 'Số lượng tồn kho'];
+    headers.forEach((item)=> {
+        const itemHeader = document.createElement('th');
+        itemHeader.textContent = item;
+        headerRow.appendChild(itemHeader);
+    });
+
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+    tableContainer.appendChild(table);
+    
+    const tbody = document.createElement('tbody');
+    wearData.forEach(item => {
+        item.sold = getRandomNumber(0, item.stock);
+    });
+
+    wearData.forEach((item, index) => {
+        const row = document.createElement('tr');
+        // STT
+        const sttCell = document.createElement('td');
+        sttCell.textContent = index + 1;
+        row.appendChild(sttCell);
+
+        // Tên sản phẩm
+        const nameCell = document.createElement('td');  
+        nameCell.textContent = item.name;
+        row.appendChild(nameCell);
+
+        // Ảnh minh họa
+        const imageCell = document.createElement('td');
+        const image = document.createElement('img');
+        image.src = item.image;
+        image.alt = item.name;
+        image.classList.add('service-image');
+        imageCell.appendChild(image);
+        row.appendChild(imageCell); 
+
+        // Giá nhập 
+        const importPriceCell = document.createElement('td');
+        importPriceCell.textContent = item.importPrice;
+        row.appendChild(importPriceCell);
+
+        // Giá bán
+        const priceCell = document.createElement('td');
+        priceCell.textContent = item.price;
+        row.appendChild(priceCell); 
+        
+        // Đã bán
+        const soldCell = document.createElement('td');
+        soldCell.textContent = item.sold;
+        row.appendChild(soldCell);
+
+        // Số lượng tồn kho
+        const stockCell = document.createElement('td');
+        stockCell.textContent = item.stock;
+        row.appendChild(stockCell);
+
+        tbody.appendChild(row);
+    })
+
+    table.appendChild(tbody);
+    tableContainer.appendChild(table);
+}
+
+// Tag 2 bảng sp
+function setupTagService() {
+    const tagEating = document.querySelector('.tag-eating');
+    const tagWearing = document.querySelector('.tag-wearing');
+
+    tagEating.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    })
+
+    tagWearing.addEventListener('click', () => {
+        window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: 'smooth'
+        });
+    })
+}
+function setupTagSale() {
+    const tagBooking = document.querySelector('.tag-booking');
+    const tagEating = document.querySelector('.tag-eating');
+    const tagWearing = document.querySelector('.tag-wearing');
+    const tagCalendar = document.querySelector('.tag-calendar');
+
+    tagBooking.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    })
+
+    tagEating.addEventListener('click', () => {
+        window.scrollTo({
+            top: 600,
+            behavior: 'smooth'
+        });
+    })
+
+    tagWearing.addEventListener('click', () => {
+        window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: 'smooth'
+        });
+    })
+
+    tagCalendar.addEventListener('click', () => {
+        const calendarContainer = document.getElementById('calendar-container');
+        const prevYearBtn = document.getElementById('prev-year');
+        const nextYearBtn = document.getElementById('next-year');
+        const currentYearElement = document.getElementById('current-year');
+        const monthsGrid = document.querySelector('.months-grid');
+        
+        let currentYear = new Date().getFullYear();
+        currentYearElement.textContent = currentYear;
+        
+        // Hiển thị lịch
+        calendarContainer.classList.remove('hidden');
+        renderCalendar();
+        
+        // Điều hướng năm trước
+        prevYearBtn.addEventListener('click', function() {
+            currentYear--;
+            renderCalendar();
+        });
+        
+        // Điều hướng năm sau
+        nextYearBtn.addEventListener('click', function() {
+            currentYear++;
+            renderCalendar();
+        });
+        
+        // Tạo lịch cho cả năm
+        function renderCalendar() {
+            currentYearElement.textContent = currentYear;
+            monthsGrid.innerHTML = '';
+            
+            const today = new Date();
+            const currentMonth = today.getMonth();
+            
+            // Mảng tên tháng
+            const monthNames = [
+                '1', '2', '3', '4', '5', '6',
+                '7', '8', '9', '10', '11', '12'
+            ];
+            
+            // Tạo nút cho từng tháng
+            for (let month = 0; month < 12; month++) {
+                const monthButton = document.createElement('button');
+                monthButton.className = 'month-button';
+                monthButton.textContent = monthNames[month];
+                
+                // Đánh dấu tháng hiện tại
+                if (month === currentMonth && currentYear === today.getFullYear()) {
+                    monthButton.classList.add('current-month');
+                }
+                
+                // Xử lý sự kiện khi click vào tháng
+                monthButton.addEventListener('click', function() {
+                    // Chọn tháng và thực hiện hành động tương ứng
+                    alert(`Bạn đã chọn tháng ${monthNames[month]} năm ${currentYear}`);
+                    // Đóng lịch sau khi chọn
+                    calendarContainer.classList.add('hidden');
+                });
+                
+                monthsGrid.appendChild(monthButton);
+            }
+        }
+        
+    });
+
+    // Đóng lịch khi click ra ngoài vùng lịch
+    document.addEventListener('click', function(event) {
+        const calendarContainer = document.getElementById('calendar-container');
+        
+        // Chỉ xử lý nếu lịch đang hiển thị
+        if (!calendarContainer.classList.contains('hidden')) {
+            // Nếu click không nằm trong calendar và không phải là nút calendar
+            if (!event.target.closest('#calendar-container') && 
+                !event.target.closest('.tag-calendar')) {
+                calendarContainer.classList.add('hidden');
+            }
+        }
+    });
+}
+
+// saleStats.html
+function initializeSaleTable() {
+    setupTagSale();
+}
+

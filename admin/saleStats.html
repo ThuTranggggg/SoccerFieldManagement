@@ -17,6 +17,46 @@
             <li><a href="P:/SoccerFieldManagement/admin/invoiceStats.html">Thống kê hóa đơn</a></li>
         </ul>
     </nav>
+
+    <!-- Tag 3 bảng sp + tag lịch-->
+    <button class="tag-booking"><i class="fa-solid fa-check-to-slot" style="font-size: 20px;"></i></button>
+    <button class="tag-eating"><i class="fa-solid fa-utensils" style="font-size: 20px;"></i></button>
+    <button class="tag-wearing"><i class="fa-solid fa-futbol" style="font-size: 20px;"></i></button>
+    <button class="tag-calendar"><i class="fa-solid fa-calendar-days" style="font-size: 20px;"></i></button>
+
+    <!-- Form lịch -->
+    <div id="calendar-container" class="hidden">
+        <div class="calendar-header">
+            <div class="year-selector">
+                <button id="prev-year">&#9664;</button>
+                <span id="current-year">2025</span>
+                <button id="next-year">&#9654;</button>
+            </div>
+        </div>
+        
+        <div class="months-grid">
+            <!-- Các tháng sẽ được tạo bằng JavaScript -->
+        </div>
+    </div>
+
+    <!-- Bảng thống kê doanh số đặt sân -->
+     <div class="Stats-container">
+        <div class="booking-dashboard"></div>
+        <div class="booking-result"></div>
+     </div>
+
+    <!-- Bảng thống kê doanh số đồ ăn -->
+     <div class="Stats-container">
+        <div class="eating-dashboard"></div>
+        <div class="eating-result"></div>
+    </div>
+
+     <!-- Bảng thống kê doanh số trang phục -->
+     <div class="Stats-container">
+        <div class="wearing-dashboard"></div>
+        <div class="wearing-result"></div>
+     </div>
+
     <script src="P:/SoccerFieldManagement/assets/js/admin.js"></script>
 </body>
 </html>

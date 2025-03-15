@@ -325,14 +325,304 @@ th.today {
     padding: 0;
 }
 
+/* Bảng quản lý đồ ăn */
+.eat-table-container {
+    width: 80%;
+    margin: 90px auto;
+    padding: 0;
+    overflow-y: auto;
+    height: 560px;
+    /* background-color: #FFFFFF; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+}
+
+.eat-table-header {
+    background-color: #000000;
+    position: sticky;
+}
+
+/* Bảng quản lý trang phục */
+.wear-table-container {
+    width: 80%;
+    margin: 121px auto;
+    padding: 0;
+    overflow-y: auto;
+    height: 560px;
+    /* background-color: #FFFFFF; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+}
+
+.wear-table-header {
+    background-color: #000000;
+    position: sticky;
+}
+
+/* Tag 2 bảng sp */
+.tag-eating {
+    width: 50px;
+    height: 50px;
+    background-color: #FFFFFF;
+    left: 5px;
+    top: 186px;
+    border-radius: 50px;
+    cursor: pointer;
+    border: none;
+    position: fixed;
+}
+
+.tag-wearing {
+    width: 50px;
+    height: 50px;
+    background-color: #FFFFFF;
+    left: 5px;
+    top: 242px;
+    border-radius: 50px;
+    cursor: pointer;
+    border: none;
+    position: fixed;
+}
+
+.tag-booking:hover,
+.tag-calendar:hover,
+.tag-eating:hover,
+.tag-wearing:hover {
+    left: 10px;
+    background-color: rgb(129, 170, 134);
+}
+
+/* Tag thêm/sửa/xóa */
+.tag-add {
+    width: 80px;
+    height: 50px;
+    background-color: #FFFFFF;
+    right: 5px;
+    top: 130px;
+    border-radius: 50px;
+    cursor: pointer;
+    border: none;
+    position: fixed;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.tag-edit {
+    width: 80px;
+    height: 50px;
+    background-color: #FFFFFF;
+    right: 5px;
+    top: 186px;
+    border-radius: 50px;
+    cursor: pointer;
+    border: none;
+    position: fixed;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.tag-delete {
+    width: 80px;
+    height: 50px;
+    background-color: #FFFFFF;
+    right: 5px;
+    top: 242px;
+    border-radius: 50px;
+    cursor: pointer;
+    border: none;
+    position: fixed;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.tag-add:hover,
+.tag-edit:hover,
+.tag-delete:hover {
+    background-color: rgb(129, 170, 134);
+    right: 20px;
+}
+
 /* saleStats.html */
 .body-saleStats {
     position: relative;
     width: 1440px;
-    height: 1290px;
+    height: 1935px;
     background: linear-gradient(180deg, #0F4E36 0%, #6FFFC8 100%);
     margin: 0;
     padding: 0;
+}
+
+/* tag lịch */
+.tag-booking {
+    width: 50px;
+    height: 50px;
+    background-color: #FFFFFF;
+    left: 5px;
+    top: 130px;
+    border-radius: 50px;
+    cursor: pointer;
+    border: none;
+    position: fixed;
+}
+
+.tag-calendar {
+    width: 50px;
+    height: 50px;
+    background-color: #FFFFFF;
+    left: 5px;
+    top: 298px;
+    border-radius: 50px;
+    cursor: pointer;
+    border: none;
+    position: fixed;
+}
+
+/* Form lịch */
+#calendar-container {
+    position: fixed;
+    top: 242px;
+    left: 65px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    z-index: 1000;
+    width: 150px;
+    height: 200px;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.year-selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#current-year {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#prev-year, #next-year {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #555;
+}
+
+.months-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.month-button {
+    padding: 8px 0;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 14px;
+}
+
+.month-button:hover {
+    background-color: #e0e0e0;
+}
+
+.month-button.current-month {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Bảng thống kê doanh số đặt sân */
+.Stats-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.booking-dashboard {
+    width: 60%;
+    margin-top: 100px;
+    margin-left: 110px;
+    padding: 0;
+    overflow-x: auto;
+    height: 530px;
+    background-color: #FFFFFF;
+}
+
+.booking-result {
+    width: 400px;
+    margin-top: 100px;
+    margin-right: 10px;
+    padding: 0;
+    overflow-x: auto;
+    height: 530px;
+    background-color: #FFFFFF;
+}
+
+/* Bảng thống kê doanh số đồ ăn */
+.eating-dashboard {
+    width: 60%;
+    margin-top: 80px;
+    margin-left: 110px;
+    padding: 0;
+    overflow-x: auto;
+    height: 530px;
+    background-color: #FFFFFF;
+}
+
+.eating-result {
+    width: 400px;
+    margin-top: 80px;
+    margin-right: 10px;
+    padding: 0;
+    overflow-x: auto;
+    height: 530px;
+    background-color: #FFFFFF;
+}
+
+/* Bảng thống kê doanh số trang phục */
+.wearing-dashboard {
+    width: 60%;
+    margin-top: 115px;
+    margin-left: 110px;
+    padding: 0;
+    overflow-x: auto;
+    height: 530px;
+    background-color: #FFFFFF;
+}
+
+.wearing-result {
+    width: 400px;
+    margin-top: 115px;
+    margin-right: 10px;
+    padding: 0;
+    overflow-x: auto;
+    height: 530px;
+    background-color: #FFFFFF;
 }
 
 /* invoiceStats.html */
@@ -342,4 +632,27 @@ th.today {
     margin: 0;
     padding: 0;
     background: linear-gradient(180deg, #0F4E36 0%, #6FFFC8 100%);
+}
+
+/* Tùy chỉnh thanh cuộn */
+.eat-table-container::-webkit-scrollbar,
+.wear-table-container::-webkit-scrollbar {
+    width: 5px; /* Độ rộng của thanh cuộn */
+}
+
+.eat-table-container::-webkit-scrollbar-track,
+.wear-table-container::-webkit-scrollbar-track {
+    /* background: #ffffff; */
+    border-radius: 5px; /* Bo góc track */
+}
+
+.eat-table-container::-webkit-scrollbar-thumb,
+.wear-table-container::-webkit-scrollbar-thumb {
+    background: #0b4f3a; /* Màu của thanh cuộn */
+    border-radius: 10px; /* Bo góc thanh cuộn */
+}
+
+.eat-table-container::-webkit-scrollbar-thumb:hover,
+.wear-table-container::-webkit-scrollbar-thumb:hover {
+    background: #797878; /* Màu khi hover */
 }
