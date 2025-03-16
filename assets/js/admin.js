@@ -114,7 +114,9 @@ function highlightActiveNavItem() {
 // bookingStats.html
 //Khởi tạo ngày T2 đầu tuần hiện tại
 let currentWeekStart = new Date();
-currentWeekStart.setDate(currentWeekStart.getDate() - currentWeekStart.getDay() + 1); // Set to Monday of current week
+// Sửa lại công thức để xử lý đúng khi ngày hiện tại là Chủ Nhật
+const currentDay = currentWeekStart.getDay(); // 0 = CN, 1 = T2, ..., 6 = T7
+currentWeekStart.setDate(currentWeekStart.getDate() - (currentDay === 0 ? 6 : currentDay - 1)); // Set to Monday of current week
 
 // Khởi tạo lịch đặt sân
 function initializeBookingCalendar() {
@@ -179,7 +181,9 @@ function setupCalendarNavigation() {
         todayButton.addEventListener('click', () => {
             const today = new Date();
             currentWeekStart = new Date(today);
-            currentWeekStart.setDate(today.getDate() - today.getDay() + 1); // Set to Monday of current week
+            // Sửa lại công thức để tính đúng ngày bắt đầu tuần, xử lý đúng trường hợp hôm nay là Chủ Nhật
+            const todayDay = today.getDay(); // 0 = CN, 1 = T2, ..., 6 = T7
+            currentWeekStart.setDate(today.getDate() - (todayDay === 0 ? 6 : todayDay - 1)); // Set to Monday of current week
             generateBookingTable(); // Tạo lại bảng đặt sân
             updateCalendarHeader(); // Đã chuyển xuống dưới để cập nhật tiêu đề sau khi tạo bảng -> hiển thị thanh nav
         });
@@ -214,87 +218,94 @@ function formatDateYYYYMMDD(date) {
     return `${year}-${month}-${day}`;
 }
 
-// Hàm lấy giá tiền theo giờ
-function getPrice(time) {
-    const hour = parseInt(time.split(':')[0]);
-    if (hour >= 5 && hour < 17) {
-        return '200.000đ';
-    } else if (hour >= 17 && hour < 22) {
-        return '250.000đ';
-    } else {
-        return '300.000đ';
-    }
-}
-
 // Tạo bảng đặt sân
 function generateBookingTable() {
     const tableContainer = document.querySelector('.table-container');
     if (!tableContainer) return;
     tableContainer.innerHTML = '';
-    
+
+    // Tạo tiêu đề
     const table = document.createElement('table');
     const thead = document.createElement('thead');
     const headerRow = document.createElement('tr');
+
+    thead.classList.add('booking-table-header');
+
+    // Tạo ô tiêu đề "Giờ" ở góc trên bên trái
     const timeHeader = document.createElement('th');
-    timeHeader.textContent = 'Giờ';
+    timeHeader.textContent = "Giờ";
     headerRow.appendChild(timeHeader);
-    
-    const weekdays = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+
+    // Tạo header cho các ngày trong tuần
     const weekdayNames = ['Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy', 'Chủ Nhật'];
-    
-    weekdays.forEach((day, index) => {
+    weekdayNames.forEach((day, index) => {
         const dayHeader = document.createElement('th');
-        dayHeader.id = day;
-        dayHeader.textContent = weekdayNames[index];
+        dayHeader.textContent = day;
+        dayHeader.id = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'][index];
         headerRow.appendChild(dayHeader);
     });
-    
+
     thead.appendChild(headerRow);
     table.appendChild(thead);
-    
+
+    // Tạo nội dung bảng
     const tbody = document.createElement('tbody');
-    const timeSlots = [
-        '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00',
-        '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00',
-        '21:00', '22:00', '23:00', '24:00'
+    const hours = ['05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00', '24:00'];
+    
+    const datas = [
+        [2, 4, 1, 3, 0, 2, 1],
+        [0, 2, 4, 2, 1, 3, 0],
+        [3, 1, 0, 4, 2, 1, 3],
+        [1, 3, 2, 1, 4, 0, 2],
+        [4, 0, 3, 2, 1, 4, 0],
+        [2, 4, 1, 0, 3, 2, 4],
+        [0, 2, 4, 3, 1, 0, 3],
+        [3, 1, 0, 2, 4, 3, 1],
+        [1, 3, 2, 4, 0, 1, 2],
+        [4, 0, 3, 1, 2, 4, 0],
+        [2, 4, 1, 3, 0, 2, 3],
+        [0, 2, 4, 0, 3, 1, 4],
+        [3, 1, 0, 2, 4, 0, 2],
+        [1, 3, 2, 4, 1, 3, 1],
+        [4, 0, 3, 1, 2, 4, 3],
+        [2, 4, 1, 0, 3, 2, 0],
+        [0, 2, 4, 3, 1, 0, 4],
+        [3, 1, 0, 2, 4, 3, 2],
+        [1, 3, 2, 4, 0, 1, 3],
+        [4, 0, 3, 1, 2, 4, 1]
     ];
     
-    const now = new Date();
-    const today = new Date(now);
-    today.setHours(0, 0, 0, 0);
-    
-    timeSlots.forEach(time => {
+    // Tạo hàng cho mỗi giờ
+    hours.forEach((hour, hourIndex) => {
         const row = document.createElement('tr');
+        
+        // Tạo ô chỉ giờ (cột đầu tiên)
         const timeCell = document.createElement('td');
-        timeCell.textContent = time;
+        timeCell.textContent = hour;
         row.appendChild(timeCell);
         
-        weekdays.forEach((_day, dayIndex) => {
+        // Tạo các ô cho mỗi ngày trong tuần
+        for (let dayIndex = 0; dayIndex < 7; dayIndex++) {
             const cell = document.createElement('td');
-            const date = new Date(currentWeekStart);
-            date.setDate(date.getDate() + dayIndex);
-            
-            const isPastDate = date < today;
-            const isToday = date.getDate() === now.getDate() && 
-                            date.getMonth() === now.getMonth() && 
-                            date.getFullYear() === now.getFullYear();
-            
-            const timeHour = parseInt(time.split(':')[0]);
-            const isPastTime = isToday && timeHour <= now.getHours();
-            
-            if (!isPastDate && !isPastTime) {
-                const price = getPrice(time);
-                cell.textContent = price;
-                cell.classList.add('bookable');
-            }
-            
+            const value = datas[hourIndex][dayIndex];
+            cell.style.backgroundColor = getColor(value);
+            cell.classList.add('bookable');
             row.appendChild(cell);
-        });
+        }
+        
         tbody.appendChild(row);
     });
-    
+
     table.appendChild(tbody);
     tableContainer.appendChild(table);
+}
+
+function getColor(value) {
+    if (value === 0) return '#FFFFFF';
+    if (value === 1) return '#FFBA92';
+    if (value === 2) return '#F38D52';
+    if (value === 3) return '#ED6F26';
+    return '#C04600';
 }
 
 // serviceStats.html
@@ -334,6 +345,10 @@ let eatData = [
     { name: "Nước ngọt các loại", importPrice: Math.floor(12000 * getRandomNumber(70, 90) / 100), price: 12000, image: "assets/images/meal.png", stock: getRandomNumber(10, 100), sold: 0 },
     { name: "Bánh mì trứng", importPrice: Math.floor(15000 * getRandomNumber(70, 90) / 100), price: 15000, image: "assets/images/meal.png", stock: getRandomNumber(10, 100), sold: 0 }
 ];
+// Gán giá trị ngẫu nhiên cho sold từ 0 đến stock
+eatData.forEach(item => {
+    item.sold = getRandomNumber(0, item.stock);
+});
 function generateEatTable() {
     const tableContainer = document.querySelector('.eat-table-container');
     if (!tableContainer) return;
@@ -358,11 +373,6 @@ function generateEatTable() {
     tableContainer.appendChild(table);
     
     const tbody = document.createElement('tbody');
-
-    // Gán giá trị ngẫu nhiên cho sold từ 0 đến stock
-    eatData.forEach(item => {
-        item.sold = getRandomNumber(0, item.stock);
-    });
 
     eatData.forEach((item, index) => {
         const row = document.createElement('tr');
@@ -439,7 +449,10 @@ let wearData = [
         { name: "Giày Adidas X Speedflow", importPrice: Math.floor(2300000 * getRandomNumber(70, 90) / 100), price: 2300000, image: "assets/images/boots.png", stock: getRandomNumber(10, 100), sold: 0 },
         { name: "Áo đấu Chelsea 2025 Home", importPrice: Math.floor(1250000 * getRandomNumber(70, 90) / 100), price: 1250000, image: "assets/images/jersey.png", stock: getRandomNumber(10, 100), sold: 0 },
         { name: "Quần short Nike Pro", importPrice: Math.floor(400000 * getRandomNumber(70, 90) / 100), price: 400000, image: "assets/images/shorts.png", stock: getRandomNumber(10, 100), sold: 0 }
-    ];
+];
+wearData.forEach(item => {
+    item.sold = getRandomNumber(0, item.stock);
+});
 function generateWearTable() {
     const tableContainer = document.querySelector('.wear-table-container');
     if (!tableContainer) return;
@@ -463,9 +476,6 @@ function generateWearTable() {
     tableContainer.appendChild(table);
     
     const tbody = document.createElement('tbody');
-    wearData.forEach(item => {
-        item.sold = getRandomNumber(0, item.stock);
-    });
 
     wearData.forEach((item, index) => {
         const row = document.createElement('tr');
@@ -644,5 +654,248 @@ function setupTagSale() {
 // saleStats.html
 function initializeSaleTable() {
     setupTagSale();
+    generateBookingChart();
+    generateEatChart();
+    generateWearChart();
 }
 
+// Vẽ biểu đồ đặt sân
+function generateBookingChart() {
+    const labels = [];
+    const slots = [];
+
+    for (let i =1; i<=30; i++) {
+        labels.push(i);
+        slots.push(getRandomNumber(0, 80));
+    }
+
+    // Tạo biểu đồ
+    new Chart(document.getElementById('profitBookingChart'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Số lượt đặt sân',
+                data: slots,
+                backgroundColor: 'rgb(255, 157, 118)',
+                borderColor: 'rgb(23, 135, 139)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    stepSize: 10,
+                    max: 80,
+                    ticks: {
+                        color: 'rgb(255, 255, 255)'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Số lượt đặt sân',
+                        color: 'rgb(255, 255, 255)'
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: 'rgb(255, 255, 255)'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Ngày',
+                        color: 'rgb(255, 255, 255)'
+                    }
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Biểu đồ số lượt đặt sân',
+                    color: 'rgb(255, 255, 255)',
+                    font: {
+                        size: 16,
+                        weight: 'bold'
+                    }
+                },
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+    
+    // booking-result
+    const bookingResult = document.querySelector('.booking-result');
+    if (!bookingResult) return;
+    bookingResult.innerHTML = '';
+
+    // Tạo tiêu đề
+    const bookingTitle = document.createElement('h3');
+    bookingTitle.textContent = 'Tháng x';
+    bookingTitle.style.textAlign = 'center';
+    bookingTitle.style.marginTop = '20px';
+    bookingResult.appendChild(bookingTitle);
+
+    // Tổng doanh thu
+    const totalBookingRevenue = slots.reduce((sum, slot) => sum + slot, 0)*200000;
+    const revenueContent = document.createElement('p');
+    revenueContent.textContent = `Tổng doanh thu: ${totalBookingRevenue.toLocaleString('vi-VN')} VNĐ`;
+    bookingResult.appendChild(revenueContent);
+
+    // Tổng số lượt đặt sân
+    const totalBooking = slots.reduce((sum, slot) => sum + slot, 0);
+    const bookingContent = document.createElement('p');
+    bookingContent.textContent = `Tổng số lượt đặt sân: ${totalBooking}`;
+    bookingResult.appendChild(bookingContent);
+
+    // Ngày bán nhiều nhất
+    const maxBookingDay = labels[slots.indexOf(Math.max(...slots))];
+    const maxBookingDayContent = document.createElement('p');
+    maxBookingDayContent.textContent = `Ngày bán nhiều nhất: ${maxBookingDay}/x/2025 - ${slots[maxBookingDay-1]} lượt`;
+    bookingResult.appendChild(maxBookingDayContent);
+
+    // Ngày bán ít nhất
+    const minBookingDay = labels[slots.indexOf(Math.min(...slots))];
+    const minBookingDayContent = document.createElement('p');
+    minBookingDayContent.textContent = `Ngày bán ít nhất: ${minBookingDay}/x/2025 - ${slots[minBookingDay-1]} lượt`;
+    bookingResult.appendChild(minBookingDayContent);
+}
+
+// Vẽ biểu đồ bán đồ ăn
+function generateEatChart() {
+    const labels = [];
+    const profitRates = [];
+
+    // Gán giá trị ngẫu nhiên cho sold từ 0 đến stock
+    eatData.forEach(item => {
+        item.profitRate = ((item.price - item.importPrice)*100 / item.importPrice).toFixed(2);
+    });
+
+    eatData.sort((a, b) => b.profitRate - a.profitRate);
+    eatData.forEach(item => {
+        labels.push(item.name);
+        profitRates.push(item.profitRate);
+    });
+    const color = 'rgb(246, 254, 255)';
+
+    // Tạo biểu đồ
+     setupChart(labels, profitRates, 'profitEatingChart', color, 'đồ ăn');
+     setupResult('.eating-result', eatData);
+}
+
+// Vẽ biểu đồ bán trang phục
+function generateWearChart() {
+    const labels = [];
+    const profitRates = [];
+
+    wearData.forEach(item => {
+        item.profitRate = ((item.price - item.importPrice)*100 / item.importPrice).toFixed(2);
+    });
+
+    wearData.sort((a, b) => b.profitRate - a.profitRate);
+    wearData.forEach(item => {
+        labels.push(item.name);
+        profitRates.push(item.profitRate);
+    });
+
+    const color = 'rgb(60, 60, 60)';
+
+    setupChart(labels, profitRates, 'profitWearChart', color, 'trang phục');
+    setupResult('.wearing-result', wearData);
+}
+    
+// Hàm tạo biểu đồ
+function setupChart(labels, profit, chartId, color, name) {
+    const ctx = document.getElementById(chartId).getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{ 
+                data: profit,
+                label: 'lãi suất(%)',
+                backgroundColor: 'rgb(255, 157, 118)',
+                borderColor: 'rgb(23, 135, 139)',
+                borderWidth: 1
+             }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    stepSize: 10,
+                    max: 100,
+                    ticks: {
+                        color: color
+                    },
+                    title: {
+                        display: true,
+                        text: 'lãi suất(%)',
+                        color: color
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: color
+                    },
+                    title: {
+                        display: true,
+                        text: 'sản phẩm',
+                        color: color
+                    }
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: `Biểu đồ lãi suất sản phẩm ${name}`,
+                    color: color,
+                    font: {
+                        size: 16,
+                        weight: 'bold'
+                    }
+                },
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+}
+
+function setupResult(resultClass, data) {
+    // Tạo mục kết quả eating-result
+    const eatingResult = document.querySelector(resultClass);
+    if (!eatingResult) return;
+    eatingResult.innerHTML = '';
+    
+    const eatingTitle = document.createElement('h3');
+    eatingTitle.textContent = 'Tháng x';
+    eatingTitle.style.textAlign = 'center';
+    eatingTitle.style.marginTop = '20px';
+    eatingResult.appendChild(eatingTitle);
+
+    // Tổng doanh thu
+    const totalEatingRevenue = data.reduce((sum, item) => sum + item.price * item.sold, 0);
+    const revenueContent = document.createElement('p');
+    revenueContent.textContent = `Tổng doanh thu: ${totalEatingRevenue.toLocaleString('vi-VN')} VNĐ`;
+    eatingResult.appendChild(revenueContent);
+
+    // Vốn
+    const totalEatingCost = data.reduce((sum, item) => sum + item.importPrice * item.sold, 0);
+    const costContent = document.createElement('p');
+    costContent.textContent = `Tổng vốn: ${totalEatingCost.toLocaleString('vi-VN')} VNĐ`;
+    eatingResult.appendChild(costContent);
+
+    // Lãi
+    const profitContent = document.createElement('p');
+    const profit = totalEatingRevenue - totalEatingCost;
+    profitContent.textContent = `Lãi: ${profit.toLocaleString('vi-VN')} VNĐ`;
+    eatingResult.appendChild(profitContent);
+
+    // Tỷ lệ lãi
+    const profitRateContent = document.createElement('p');
+    profitRateContent.textContent = `Tỷ lệ lãi: ${((profit) * 100 / totalEatingCost).toFixed(2)}%`;
+    eatingResult.appendChild(profitRateContent);
+}

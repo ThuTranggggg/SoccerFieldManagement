@@ -72,7 +72,9 @@ function setupMapDirections() {
 // booking.html
 //Khởi tạo ngày T2 đầu tuần hiện tại
 let currentWeekStart = new Date();
-currentWeekStart.setDate(currentWeekStart.getDate() - currentWeekStart.getDay() + 1); // Set to Monday of current week
+// Sửa lại công thức để xử lý đúng khi ngày hiện tại là Chủ Nhật
+const currentDay = currentWeekStart.getDay(); // 0 = CN, 1 = T2, ..., 6 = T7
+currentWeekStart.setDate(currentWeekStart.getDate() - (currentDay === 0 ? 6 : currentDay - 1)); // Set to Monday of current week
 
 // Khởi tạo lịch đặt sân
 function initializeBookingCalendar() {
@@ -137,7 +139,9 @@ function setupCalendarNavigation() {
         todayButton.addEventListener('click', () => {
             const today = new Date();
             currentWeekStart = new Date(today);
-            currentWeekStart.setDate(today.getDate() - today.getDay() + 1); // Set to Monday of current week
+            // Sửa lại công thức để tính đúng ngày bắt đầu tuần, xử lý đúng trường hợp hôm nay là Chủ Nhật
+            const todayDay = today.getDay(); // 0 = CN, 1 = T2, ..., 6 = T7
+            currentWeekStart.setDate(today.getDate() - (todayDay === 0 ? 6 : todayDay - 1)); // Set to Monday of current week
             generateBookingTable(); // Tạo lại bảng đặt sân
             updateCalendarHeader(); // Đã chuyển xuống dưới để cập nhật tiêu đề sau khi tạo bảng -> hiển thị thanh nav
         });

@@ -132,7 +132,7 @@
     display: none;
     position: fixed;
     background-color: #f9f9f9;
-    min-width: 160px;
+    min-width: 107px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1001;
     top: 45px;
@@ -151,7 +151,7 @@
 }
 
 .dropdown-menu li {
-    padding: 12px 16px;
+    padding: 9px 11px;
     cursor: pointer;
 }
 
@@ -162,24 +162,22 @@
 /* Hamburger Icon */
 .hamburger-icon {
     position: fixed;
-    top: 10px;
-    right: 20px;
+    top: 2px;
+    right: 2px;
     font-size: 24px;
     cursor: pointer;
     z-index: 1002;
     color: #000;
-    background-color: #fff;
     width: 40px;
     height: 40px;
-    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    border-radius: 50%;
 }
 
 .hamburger-icon:hover {
-    background-color: #f0f0f0;
+    background-color: rgb(129, 170, 134);
 }
 
 /* bookingStats.html */
@@ -256,6 +254,11 @@
     overflow-y: auto; 
     width: 80%;
     margin: 15px auto;
+}
+
+.booking-table-header {
+    background-color: #000000;
+    position: sticky;
 }
 
 table {
@@ -570,17 +573,22 @@ th.today {
     padding: 0;
     overflow-x: auto;
     height: 530px;
-    background-color: #FFFFFF;
+    /* background-color: #FFFFFF; */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .booking-result {
-    width: 400px;
-    margin-top: 100px;
-    margin-right: 10px;
-    padding: 0;
-    overflow-x: auto;
-    height: 530px;
-    background-color: #FFFFFF;
+    width: 297px;
+    margin-top: -68px;
+    margin-right: 38px;
+    border-radius: 0px;
+    padding: 0 38px;
+    height: 277px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
 }
 
 /* Bảng thống kê doanh số đồ ăn */
@@ -591,17 +599,21 @@ th.today {
     padding: 0;
     overflow-x: auto;
     height: 530px;
-    background-color: #FFFFFF;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .eating-result {
-    width: 400px;
-    margin-top: 80px;
-    margin-right: 10px;
-    padding: 0;
-    overflow-x: auto;
-    height: 530px;
-    background-color: #FFFFFF;
+    width: 297px;
+    margin-top: -68px;
+    margin-right: 38px;
+    border-radius: 0px;
+    padding: 0 38px;
+    height: 277px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
 }
 
 /* Bảng thống kê doanh số trang phục */
@@ -612,17 +624,31 @@ th.today {
     padding: 0;
     overflow-x: auto;
     height: 530px;
-    background-color: #FFFFFF;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.chart-wrapper {
+    width: 1115px;
+    height: 512px;
+}
+
+#profitEatingChart {
+    width: 100% !important;
+    height: 100% !important;
 }
 
 .wearing-result {
-    width: 400px;
-    margin-top: 115px;
-    margin-right: 10px;
-    padding: 0;
-    overflow-x: auto;
-    height: 530px;
-    background-color: #FFFFFF;
+    width: 297px;
+    margin-top: -68px;
+    margin-right: 38px;
+    border-radius: 0;
+    padding: 0 38px;
+    height: 277px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    color: #000000;
+    font-family: 'Inter', sans-serif;
 }
 
 /* invoiceStats.html */
@@ -635,24 +661,43 @@ th.today {
 }
 
 /* Tùy chỉnh thanh cuộn */
-.eat-table-container::-webkit-scrollbar,
-.wear-table-container::-webkit-scrollbar {
-    width: 5px; /* Độ rộng của thanh cuộn */
+.booking-dashboard::-webkit-scrollbar,
+.wearing-dashboard::-webkit-scrollbar,
+.eating-dashboard::-webkit-scrollbar {
+    height: 6px;
 }
 
+.table-container::-webkit-scrollbar,
+.eat-table-container::-webkit-scrollbar,
+.wear-table-container::-webkit-scrollbar {
+    width: 5px;
+}
+
+.table-container::-webkit-scrollbar-track,
+.booking-dashboard::-webkit-scrollbar-track,
+.wearing-dashboard::-webkit-scrollbar-track,
+.eating-dashboard::-webkit-scrollbar-track,
 .eat-table-container::-webkit-scrollbar-track,
 .wear-table-container::-webkit-scrollbar-track {
     /* background: #ffffff; */
-    border-radius: 5px; /* Bo góc track */
+    border-radius: 5px;
 }
 
+.table-container::-webkit-scrollbar-thumb,
+.booking-dashboard::-webkit-scrollbar-thumb,
+.wearing-dashboard::-webkit-scrollbar-thumb,
+.eating-dashboard::-webkit-scrollbar-thumb,
 .eat-table-container::-webkit-scrollbar-thumb,
 .wear-table-container::-webkit-scrollbar-thumb {
-    background: #0b4f3a; /* Màu của thanh cuộn */
-    border-radius: 10px; /* Bo góc thanh cuộn */
+    background: #0b4f3a;
+    border-radius: 10px;
 }
 
+.table-container::-webkit-scrollbar-thumb:hover,
+.booking-dashboard::-webkit-scrollbar-thumb:hover,
+.wearing-dashboard::-webkit-scrollbar-thumb:hover,
+.eating-dashboard::-webkit-scrollbar-thumb:hover,
 .eat-table-container::-webkit-scrollbar-thumb:hover,
 .wear-table-container::-webkit-scrollbar-thumb:hover {
-    background: #797878; /* Màu khi hover */
+    background: #797878;
 }
