@@ -864,6 +864,7 @@ function setupChart(labels, profit, chartId, color, name) {
     });
 }
 
+// Bảng result
 function setupResult(resultClass, data) {
     // Tạo mục kết quả eating-result
     const eatingResult = document.querySelector(resultClass);

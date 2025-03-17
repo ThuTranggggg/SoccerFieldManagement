@@ -720,20 +720,28 @@ th.today {
     background: linear-gradient(180deg, #8CD698 0%, #1F5935 100%);
 }
 
+.body-services::-webkit-scrollbar,
+.body-index::-webkit-scrollbar,
 .body-opponent::-webkit-scrollbar {
     width: 10px;
 }
 
+.body-services::-webkit-scrollbar-track,
+.body-index::-webkit-scrollbar-track,
 .body-opponent::-webkit-scrollbar-track {
-    background: #ffffff;
+    /* background: #ffffff; */
     border-radius: 5px;
 }
 
+.body-services::-webkit-scrollbar-thumb,
+.body-index::-webkit-scrollbar-thumb,
 .body-opponent::-webkit-scrollbar-thumb {
     background: #b2b1b1;
     border-radius: 10px;
 }
 
+.body-services::-webkit-scrollbar-thumb:hover,
+.body-index::-webkit-scrollbar-thumb:hover,
 .body-opponent::-webkit-scrollbar-thumb:hover {
     background: #797878;
 }
@@ -1494,6 +1502,7 @@ th.today {
 }
 
 /* Tùy chỉnh thanh cuộn */
+.table-container::-webkit-scrollbar,
 .post-container::-webkit-scrollbar,
 .post-description-detail::-webkit-scrollbar,
 .services-container::-webkit-scrollbar,
@@ -1501,6 +1510,7 @@ th.today {
     width: 5px; /* Độ rộng của thanh cuộn */
 }
 
+.table-container::-webkit-scrollbar-track,
 .post-container::-webkit-scrollbar-track,
 .post-description-detail::-webkit-scrollbar-track,
 .services-container::-webkit-scrollbar-track,
@@ -1509,6 +1519,7 @@ th.today {
     border-radius: 5px; /* Bo góc track */
 }
 
+.table-container::-webkit-scrollbar-thumb,
 .post-container::-webkit-scrollbar-thumb,
 .post-description-detail::-webkit-scrollbar-thumb,
 .services-container::-webkit-scrollbar-thumb,
@@ -1517,6 +1528,7 @@ th.today {
     border-radius: 10px; /* Bo góc thanh cuộn */
 }
 
+.table-container::-webkit-scrollbar-thumb:hover,
 .post-container::-webkit-scrollbar-thumb:hover,
 .post-description-detail::-webkit-scrollbar-thumb:hover,
 .services-container::-webkit-scrollbar-thumb:hover,
