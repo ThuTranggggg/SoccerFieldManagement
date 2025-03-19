@@ -44,15 +44,92 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Xử lý khi click vào option Logout
     logoutOption.addEventListener('click', function() {
-        // Ở đây bạn có thể thêm code để hiển thị form logout
-        alert('Bạn đã chọn Logout - Hiển thị form xử lý logout tại đây');
-        dropdownMenu.classList.remove('show');
+        window.location.href = '/admin/login.html';
     });
 
     // Xử lý khi click vào option Hòm thư
     mailboxOption.addEventListener('click', function() {
-        // Ở đây bạn có thể thêm code để hiển thị form hòm thư
-        alert('Bạn đã chọn Hòm thư - Hiển thị form xử lý hòm thư tại đây');
+        const mailboxPopup = document.querySelector('.mailbox-popup');
+        const overlay = document.querySelector('.overlay');
+        const mailboxContent = document.querySelector('.mailbox-content');
+        
+        // Dữ liệu mẫu cho các thư
+        const mailItems = [
+            {
+                id: 1,
+                title: 'Đề xuất cải thiện chất lượng sân',
+                date: '20/03/2024',
+                preview: 'Tôi thấy sân bóng của quý khách rất tốt, tuy nhiên có một số đề xuất để cải thiện chất lượng...',
+                isRead: false
+            },
+            {
+                id: 2,
+                title: 'Phản hồi về dịch vụ',
+                date: '19/03/2024',
+                preview: 'Cảm ơn quý khách đã phục vụ chúng tôi. Dịch vụ rất tốt và chuyên nghiệp...',
+                isRead: true
+            },
+            {
+                id: 3,
+                title: 'Đề xuất thêm dịch vụ',
+                date: '18/03/2024',
+                preview: 'Tôi muốn đề xuất thêm một số dịch vụ mới để phục vụ khách hàng tốt hơn...',
+                isRead: false
+            },
+            {
+                id: 4,
+                title: 'Phản hồi về nhân viên',
+                date: '17/03/2024',
+                preview: 'Nhân viên phục vụ rất nhiệt tình và chuyên nghiệp. Tôi rất hài lòng...',
+                isRead: true
+            }
+        ];
+
+        // Xóa nội dung cũ
+        mailboxContent.innerHTML = '';
+
+        // Thêm các thư mới
+        mailItems.forEach(mail => {
+            const mailElement = document.createElement('div');
+            mailElement.className = `mail-item ${mail.isRead ? '' : 'unread'}`;
+            mailElement.innerHTML = `
+                <div class="mail-title">${mail.title}</div>
+                <div class="mail-date">${mail.date}</div>
+                <div class="mail-preview">${mail.preview}</div>
+            `;
+
+            // Xử lý click vào thư
+            mailElement.addEventListener('click', function() {
+                if (!mail.isRead) {
+                    mailElement.classList.remove('unread');
+                    mail.isRead = true;
+                }
+                // Ở đây có thể thêm code để hiển thị nội dung chi tiết của thư
+                alert('Nội dung thư: ' + mail.preview);
+            });
+
+            mailboxContent.appendChild(mailElement);
+        });
+
+        // Hiển thị popup và overlay
+        mailboxPopup.style.display = 'flex';
+        overlay.style.display = 'block';
+
+        // Xử lý đóng popup
+        const closeButtons = mailboxPopup.querySelectorAll('.close-popup');
+        closeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                mailboxPopup.style.display = 'none';
+                overlay.style.display = 'none';
+            });
+        });
+
+        // Đóng popup khi click vào overlay
+        overlay.addEventListener('click', function() {
+            mailboxPopup.style.display = 'none';
+            overlay.style.display = 'none';
+        });
+
         dropdownMenu.classList.remove('show');
     });
 });
@@ -89,7 +166,7 @@ function loginSystem() {
             if (isValid) {
                 if (username === validCredentials.username && password === validCredentials.password) {
                     // Đăng nhập thành công, chuyển hướng đến trang bookingStats.html
-                    window.location.href = 'P:/SoccerFieldManagement/admin/bookingStats.html';
+                    window.location.href = '/admin/bookingStats.html';
                 } else {
                     // Đăng nhập không thành công
                     document.getElementById('passwordError').textContent = 'Tên đăng nhập hoặc mật khẩu không chính xác';
@@ -123,6 +200,7 @@ function initializeBookingCalendar() {
     generateBookingTable();
     updateCalendarHeader();
     setupCalendarNavigation();
+    editBookingTable();
 }
 
 //Tiêu đề lịch
@@ -157,16 +235,14 @@ function updateCurrentDateDisplay() {
     endOfWeek.setDate(endOfWeek.getDate() + 6);
     const monthNames = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 
                         'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
-    const startDay = currentWeekStart.getDate();
     const startMonth = currentWeekStart.getMonth() + 1; // Tháng 1 = 0
-    const endDay = endOfWeek.getDate();
     const endMonth = endOfWeek.getMonth() + 1;
     const year = currentWeekStart.getFullYear();
     let dateRangeText;
     if (startMonth === endMonth) {
-        dateRangeText = `${startDay}-${endDay} ${monthNames[startMonth - 1]} năm ${year}`;
+        dateRangeText = `${monthNames[startMonth - 1]} năm ${year}`;
     } else {
-        dateRangeText = `${startDay}/${startMonth}-${endDay}/${endMonth} năm ${year}`;
+        dateRangeText = `${monthNames[startMonth - 1]} - ${monthNames[endMonth - 1]} năm ${year}`;
     }
     const currentDateElement = document.querySelector('.current-date');
     if (currentDateElement) {
@@ -181,11 +257,10 @@ function setupCalendarNavigation() {
         todayButton.addEventListener('click', () => {
             const today = new Date();
             currentWeekStart = new Date(today);
-            // Sửa lại công thức để tính đúng ngày bắt đầu tuần, xử lý đúng trường hợp hôm nay là Chủ Nhật
-            const todayDay = today.getDay(); // 0 = CN, 1 = T2, ..., 6 = T7
-            currentWeekStart.setDate(today.getDate() - (todayDay === 0 ? 6 : todayDay - 1)); // Set to Monday of current week
-            generateBookingTable(); // Tạo lại bảng đặt sân
-            updateCalendarHeader(); // Đã chuyển xuống dưới để cập nhật tiêu đề sau khi tạo bảng -> hiển thị thanh nav
+            const todayDay = today.getDay();
+            currentWeekStart.setDate(today.getDate() - (todayDay === 0 ? 6 : todayDay - 1));
+            generateBookingTable();
+            updateCalendarHeader();
         });
     }
     
@@ -194,8 +269,8 @@ function setupCalendarNavigation() {
     if (prevButton) {
         prevButton.addEventListener('click', () => {
             currentWeekStart.setDate(currentWeekStart.getDate() - 7);
-            generateBookingTable(); // Tạo lại bảng đặt sân
-            updateCalendarHeader(); // Đã chuyển xuống dưới để cập nhật tiêu đề sau khi tạo bảng -> hiển thị thanh nav
+            generateBookingTable();
+            updateCalendarHeader();
         });
     }
     
@@ -204,19 +279,83 @@ function setupCalendarNavigation() {
     if (nextButton) {
         nextButton.addEventListener('click', () => {
             currentWeekStart.setDate(currentWeekStart.getDate() + 7);
-            generateBookingTable(); // Tạo lại bảng đặt sân
-            updateCalendarHeader(); // Đã chuyển xuống dưới để cập nhật tiêu đề sau khi tạo bảng -> hiển thị thanh nav
+            generateBookingTable();
+            updateCalendarHeader();
         });
+    }
+
+    // Nút chỉnh sửa
+    const editButton = document.querySelector('.edit-button');
+    const popup = document.querySelector('.edit-popup');
+    const overlay = document.querySelector('.overlay');
+    
+    if (editButton && popup) {
+        // Xử lý mở popup
+        editButton.onclick = () => {
+            editBookingTable();
+            popup.style.display = 'block';
+            overlay.style.display = 'block';
+        };
+
+        // Xử lý đóng popup khi click vào nút close
+        const closeButton = popup.querySelector('.close-popup');
+        if (closeButton) {
+            closeButton.onclick = () => {
+                popup.style.display = 'none';
+                overlay.style.display = 'none';
+            };
+        }
+
+        // Xử lý đóng popup khi click ra ngoài
+        overlay.onclick = (event) => {
+            if (event.target === overlay) {
+                popup.style.display = 'none';
+                overlay.style.display = 'none';
+            }
+        };
     }
 }
 
 // Hàm định dạng ngày tháng
-function formatDateYYYYMMDD(date) {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-}
+// function formatDateYYYYMMDD(date) {
+//     const year = date.getFullYear();
+//     const month = String(date.getMonth() + 1).padStart(2, '0');
+//     const day = String(date.getDate()).padStart(2, '0');
+//     return `${year}-${month}-${day}`;
+// }
+
+let datas = [
+    [2, 4, 1, 3, 0, 2, 1],
+    [0, 2, 4, 2, 1, 3, 0],
+    [3, 1, 0, 4, 2, 1, 3],
+    [1, 3, 2, 1, 4, 0, 2],
+    [4, 0, 3, 2, 1, 4, 0],
+    [2, 4, 1, 0, 3, 2, 4],
+    [0, 2, 4, 3, 1, 0, 3],
+    [3, 1, 0, 2, 4, 3, 1],
+    [1, 3, 2, 4, 0, 1, 2],
+    [4, 0, 3, 1, 2, 4, 0],
+    [2, 4, 1, 3, 0, 2, 3],
+    [0, 2, 4, 0, 3, 1, 4],
+    [3, 1, 0, 2, 4, 0, 2],
+    [1, 3, 2, 4, 1, 3, 1],
+    [4, 0, 3, 1, 2, 4, 3],
+    [2, 4, 1, 0, 3, 2, 0],
+    [0, 2, 4, 3, 1, 0, 4],
+    [3, 1, 0, 2, 4, 3, 2],
+    [1, 3, 2, 4, 0, 1, 3],
+    [4, 0, 3, 1, 2, 4, 1]
+];
+let inform = [
+    {
+        field: 'A',
+        time: '19:00',
+        date: '20/03/2025',
+        name: 'Nguyễn Văn A',
+        phone: '0909090909',
+        price: '400000'
+    }
+];
 
 // Tạo bảng đặt sân
 function generateBookingTable() {
@@ -252,29 +391,6 @@ function generateBookingTable() {
     const tbody = document.createElement('tbody');
     const hours = ['05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00', '24:00'];
     
-    const datas = [
-        [2, 4, 1, 3, 0, 2, 1],
-        [0, 2, 4, 2, 1, 3, 0],
-        [3, 1, 0, 4, 2, 1, 3],
-        [1, 3, 2, 1, 4, 0, 2],
-        [4, 0, 3, 2, 1, 4, 0],
-        [2, 4, 1, 0, 3, 2, 4],
-        [0, 2, 4, 3, 1, 0, 3],
-        [3, 1, 0, 2, 4, 3, 1],
-        [1, 3, 2, 4, 0, 1, 2],
-        [4, 0, 3, 1, 2, 4, 0],
-        [2, 4, 1, 3, 0, 2, 3],
-        [0, 2, 4, 0, 3, 1, 4],
-        [3, 1, 0, 2, 4, 0, 2],
-        [1, 3, 2, 4, 1, 3, 1],
-        [4, 0, 3, 1, 2, 4, 3],
-        [2, 4, 1, 0, 3, 2, 0],
-        [0, 2, 4, 3, 1, 0, 4],
-        [3, 1, 0, 2, 4, 3, 2],
-        [1, 3, 2, 4, 0, 1, 3],
-        [4, 0, 3, 1, 2, 4, 1]
-    ];
-    
     // Tạo hàng cho mỗi giờ
     hours.forEach((hour, hourIndex) => {
         const row = document.createElement('tr');
@@ -288,8 +404,21 @@ function generateBookingTable() {
         for (let dayIndex = 0; dayIndex < 7; dayIndex++) {
             const cell = document.createElement('td');
             const value = datas[hourIndex][dayIndex];
-            cell.style.backgroundColor = getColor(value);
-            cell.classList.add('bookable');
+            
+            // Thêm đánh dấu hình tròn nếu có giá trị
+            if (value > 0) {
+                const indicator = document.createElement('div');
+                indicator.className = 'booking-indicator';
+                indicator.style.backgroundColor = getColor(value);
+                cell.appendChild(indicator);
+                cell.classList.add('bookable');
+                
+                // Thêm sự kiện click cho ô có đặt sân
+                cell.addEventListener('click', () => {
+                    showBookingInfo(hour, dayIndex, value);
+                });
+            }
+            
             row.appendChild(cell);
         }
         
@@ -300,12 +429,319 @@ function generateBookingTable() {
     tableContainer.appendChild(table);
 }
 
+// Hàm hiển thị thông tin đặt sân
+function showBookingInfo(time, dayIndex, value) {
+    const bookingInfo = document.querySelector('.booking-info');
+    const bookingInfoHeader = bookingInfo.querySelector('.booking-info-header');
+    // const bookingInfoContent = document.createElement('div');
+    // bookingInfoContent.classList.add('booking-info-content');
+    const overlay = document.querySelector('.overlay');
+
+    // Lấy ngày từ dayIndex
+    const date = new Date(currentWeekStart);
+    date.setDate(date.getDate() + dayIndex);
+    const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+    
+    // Hiển thị popup và overlay
+    bookingInfo.style.display = 'block';
+    overlay.style.display = 'block';
+
+    // Cập nhật tiêu đề
+    bookingInfoHeader.textContent = `${time} - ${formattedDate}`;
+    
+    // Thêm thông tin booking theo số lượng
+    for (let i = 0; i < value; i++) {
+        const content = document.createElement('div');
+        content.classList.add('booking-info-content');
+        content.innerHTML = `
+            <p><strong>Sân:</strong> ${String.fromCharCode(65 + i)}</p>
+            <p><strong>Tên:</strong> Nguyễn Văn ${String.fromCharCode(65 + i)}</p>
+            <p><strong>SĐT:</strong> 090909090${i + 1}</p>
+            <p><strong>Giá:</strong> 400000 VNĐ</p>
+        `;
+        bookingInfo.appendChild(content);
+    }
+
+    // Xử lý đóng popup khi click vào nút close
+    const closeButton = bookingInfo.querySelector('.close-popup');
+    if (closeButton) {
+        closeButton.onclick = () => {
+            bookingInfo.style.display = 'none';
+            overlay.style.display = 'none';
+        };
+    }
+
+    // Xử lý đóng popup khi click ra ngoài
+    overlay.onclick = (event) => {
+        if (event.target === overlay) {
+            bookingInfo.style.display = 'none';
+            overlay.style.display = 'none';
+        }
+    };
+}
+
 function getColor(value) {
     if (value === 0) return '#FFFFFF';
     if (value === 1) return '#FFBA92';
     if (value === 2) return '#F38D52';
     if (value === 3) return '#ED6F26';
     return '#C04600';
+}
+
+// Nút sửa thông tin cho đặt sân
+function editBookingTable() {
+    const popup = document.querySelector('.edit-popup');
+    const popupContentTime = document.querySelector('.popup-content-time');
+    const popupContentDay = document.querySelector('.popup-content-day');
+    
+    // Xóa nội dung cũ
+    popupContentTime.innerHTML = '';
+    popupContentDay.innerHTML = '';
+    
+    // Tạo bảng thời gian mở sân
+    const table = document.createElement('table');
+    table.style.width = '100%';
+    
+    const thead = document.createElement('thead');
+    thead.style.position = 'sticky';
+    thead.style.top = '0';
+    thead.style.zIndex = '1';
+    
+    const headerRow = document.createElement('tr');
+    thead.classList.add('popup-table-header');
+
+    const headers = ['Chọn', 'Thời gian', 'Giá'];
+    const times = ['01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00', '24:00'];
+
+    headers.forEach((item) => {
+        const itemHeader = document.createElement('th');
+        itemHeader.textContent = item;
+        headerRow.appendChild(itemHeader);
+    });
+
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+    
+    const tbody = document.createElement('tbody');
+    
+    times.forEach((time) => {
+        const row = document.createElement('tr');
+        
+        const selectCell = document.createElement('td');
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.style.width = '25px';
+        checkbox.style.height = '25px';
+        selectCell.style.backgroundColor = 'white';
+        selectCell.appendChild(checkbox);
+        row.appendChild(selectCell);
+        
+        const timeCell = document.createElement('td');
+        timeCell.textContent = time;
+        row.appendChild(timeCell);
+        
+        const priceCell = document.createElement('td');
+        const priceInput = document.createElement('input');
+        priceInput.type = 'text';
+        priceInput.value = '200000';
+        priceInput.style.width = '100%';
+        priceInput.style.padding = '5px';
+        priceInput.style.border = '1px solid #ddd';
+        priceInput.style.borderRadius = '4px';
+        priceCell.appendChild(priceInput);
+        row.appendChild(priceCell);
+        
+        tbody.appendChild(row);
+    });
+    
+    table.appendChild(tbody);
+    popupContentTime.appendChild(table);
+
+    // Tạo bảng ngày nghỉ
+    const dayTable = document.createElement('table');
+    dayTable.style.width = '100%';
+    
+    const dayThead = document.createElement('thead');
+    dayThead.style.position = 'sticky';
+    dayThead.style.top = '0';
+    dayThead.style.zIndex = '1';
+    dayThead.classList.add('popup-table-header');
+    
+    const dayHeaderRow = document.createElement('tr');
+    
+    const dayHeaders = ['STT', 'Ngày nghỉ', 'Xóa'];
+    dayHeaders.forEach(header => {
+        const th = document.createElement('th');
+        th.textContent = header;
+        dayHeaderRow.appendChild(th);
+    });
+    
+    dayThead.appendChild(dayHeaderRow);
+    dayTable.appendChild(dayThead);
+    
+    const dayTbody = document.createElement('tbody');
+    dayTbody.id = 'day-off-tbody';
+    dayTable.appendChild(dayTbody);
+    
+    // Thêm một hàng mặc định
+    addDayOffRow(dayTbody);
+    
+    popupContentDay.appendChild(dayTable);
+    
+    // Thêm nút lưu
+    const saveButton = document.createElement('button');
+    saveButton.className = 'save-button';
+    saveButton.textContent = 'Lưu';
+    popup.appendChild(saveButton);
+    
+    // Xử lý sự kiện lưu
+    saveButton.onclick = function() {
+        // Lưu thời gian mở sân
+        const timeRows = tbody.querySelectorAll('tr');
+        const selectedTimes = [];
+        timeRows.forEach(row => {
+            const checkbox = row.querySelector('input[type="checkbox"]');
+            const time = row.querySelector('td:nth-child(2)').textContent;
+            const price = row.querySelector('input[type="text"]').value;
+            if (checkbox.checked) {
+                selectedTimes.push({ time, price });
+            }
+        });
+
+        // Lưu ngày nghỉ
+        const dayOffRows = dayTbody.querySelectorAll('tr');
+        const dayOffs = [];
+        dayOffRows.forEach(row => {
+            const dateInput = row.querySelector('input');
+            if (dateInput.value.trim() !== '') {
+                dayOffs.push(dateInput.value);
+            }
+        });
+
+        // Sắp xếp ngày nghỉ theo thứ tự
+        dayOffs.sort((a, b) => {
+            const dateA = parseDate(a);
+            const dateB = parseDate(b);
+            return dateA - dateB;
+        });
+
+        // Cập nhật giao diện
+        dayTbody.innerHTML = '';
+        dayOffs.forEach((date, index) => {
+            addDayOffRow(dayTbody, date, index + 1);
+        });
+
+        // Thêm một hàng trống nếu cần
+        if (dayOffs.length === 0) {
+            addDayOffRow(dayTbody);
+        }
+
+        alert('Đã lưu thông tin thành công!');
+    };
+}
+
+// Hàm thêm hàng mới cho ngày nghỉ
+function addDayOffRow(tbody, date = '', index = null) {
+    const rows = tbody.querySelectorAll('tr');
+    const newIndex = index || rows.length + 1;
+    
+    const row = document.createElement('tr');
+    
+    // Cột STT
+    const indexCell = document.createElement('td');
+    indexCell.textContent = newIndex;
+    row.appendChild(indexCell);
+    
+    // Cột ngày nghỉ
+    const dateCell = document.createElement('td');
+    const dateInput = document.createElement('input');
+    dateInput.type = 'text';
+    dateInput.placeholder = 'dd/mm/yyyy';
+    dateInput.value = date;
+    dateInput.style.width = '100%';
+    dateInput.style.padding = '5px';
+    dateInput.style.border = '1px solid #ddd';
+    dateInput.style.borderRadius = '4px';
+    
+    // Định dạng input ngày tháng
+    dateInput.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 8) {
+            value = value.substring(0, 8);
+        }
+        
+        if (value.length > 4) {
+            value = value.substring(0, 2) + '/' + value.substring(2, 4) + '/' + value.substring(4);
+        } else if (value.length > 2) {
+            value = value.substring(0, 2) + '/' + value.substring(2);
+        }
+        
+        e.target.value = value;
+    });
+
+    // Xử lý phím Enter
+    dateInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            if (dateInput.value.trim() !== '') {
+                addDayOffRow(tbody);
+            }
+        }
+    });
+    
+    dateCell.appendChild(dateInput);
+    row.appendChild(dateCell);
+    
+    // Cột xóa
+    const deleteCell = document.createElement('td');
+    const deleteButton = document.createElement('button');
+    deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
+    deleteButton.style.backgroundColor = 'transparent';
+    deleteButton.style.border = 'none';
+    deleteButton.style.color = 'red';
+    deleteButton.style.cursor = 'pointer';
+    deleteButton.style.fontSize = '16px';
+    deleteButton.onclick = function() {
+        if (rows.length > 1) {
+            tbody.removeChild(row);
+            updateRowIndexes(tbody);
+        } else {
+            dateInput.value = '';
+            dateInput.focus();
+        }
+    };
+    
+    deleteCell.appendChild(deleteButton);
+    row.appendChild(deleteCell);
+    
+    tbody.appendChild(row);
+    if (!date) {
+        dateInput.focus();
+    }
+}
+
+// Cập nhật STT sau khi xóa
+function updateRowIndexes(tbody) {
+    const rows = tbody.querySelectorAll('tr');
+    rows.forEach((row, index) => {
+        row.querySelector('td:first-child').textContent = index + 1;
+    });
+}
+
+// Hàm parse date từ format dd/mm/yyyy thành đối tượng Date
+function parseDate(dateStr) {
+    if (!dateStr || dateStr.trim() === '') return null;
+    
+    const parts = dateStr.split('/');
+    if (parts.length !== 3) return null;
+    
+    const day = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10) - 1; // Tháng trong JS: 0-11
+    const year = parseInt(parts[2], 10);
+    
+    if (isNaN(day) || isNaN(month) || isNaN(year)) return null;
+    
+    return new Date(year, month, day);
 }
 
 // serviceStats.html
