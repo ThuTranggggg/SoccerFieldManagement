@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thống Kê Thư Góp Ý</title>
+    <link rel="stylesheet" href="/assets/css/admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="body-mailStats">
+    <button class="back-button" onclick="goBack()">
+        <i class="fas fa-arrow-left"></i> Trở về
+    </button>
+    <div class="container">
+        <h1><i class="fas fa-envelope-open-text"></i> Thư Góp Ý</h1>
+        
+        <div class="statistics">
+            <p><i class="fas fa-envelope"></i> Tổng số thư: <span id="total-count">0</span></p>
+            <p><i class="fas fa-envelope-open"></i> Thư chưa đọc: <span id="unread-count">0</span></p>
+        </div>
+        
+        <div class="feedback-list" id="feedback-list">
+            <!-- Thư góp ý sẽ được thêm vào đây bằng JavaScript -->
+        </div>
+    </div>
+    
+    <template id="feedback-template">
+        <div class="feedback-item">
+            <div class="feedback-header">
+                <span class="feedback-time"></span>
+                <button class="delete-btn"><i class="fas fa-trash"></i> Xóa</button>
+            </div>
+            <div class="feedback-content">
+                <p class="feedback-text"></p>
+                <button class="read-more-btn">Xem thêm <i class="fas fa-chevron-down"></i></button>
+            </div>
+        </div>
+    </template>
+    
+    <script src="/assets/js/admin.js"></script>
+</body>
+</html>

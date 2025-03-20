@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thống Kê Bài Đăng</title>
+    <link rel="stylesheet" href="/assets/css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="body-postStats">
+    <button class="back-button" onclick="goBack()">
+        <i class="fas fa-arrow-left"></i>
+        Quay lại
+    </button>
+
+    <div class="container">
+        <h1>Thống Kê Bài Đăng</h1>
+        
+        <div class="statistics">
+            <p>Tổng số bài đăng: <span id="total-posts">0</span></p>
+        </div>
+        
+        <div class="posts-list" id="posts-list">
+            <!-- Bài đăng sẽ được thêm vào đây bằng JavaScript -->
+        </div>
+    </div>
+    
+    <template id="post-template">
+        <div class="post-item">
+            <div class="post-header">
+                <div class="post-time"></div>
+                <button class="delete-btn">Xóa</button>
+            </div>
+            <div class="post-content">
+                <div class="team-info">
+                    <h3 class="team-name"></h3>
+                    <div class="team-details">
+                        <p><strong>Số lượng thành viên:</strong> <span class="member-count"></span></p>
+                        <p><strong>Hình thức:</strong> <span class="gender-format"></span></p>
+                        <p><strong>Trình độ:</strong> <span class="skill-level"></span></p>
+                        <p><strong>Thời gian đăng ký:</strong> <span class="registration-time"></span></p>
+                        <p><strong>Sân:</strong> <span class="court-type"></span></p>
+                        <p><strong>Số điện thoại:</strong> <span class="phone-number"></span></p>
+                        <p><strong>Mật khẩu bài đăng:</strong> <span class="post-password"></span></p>
+                    </div>
+                </div>
+                <div class="description-section">
+                    <h4>Mô tả:</h4>
+                    <p class="description-text"></p>
+                    <button class="read-more-btn">Xem thêm</button>
+                </div>
+            </div>
+        </div>
+    </template>
+    
+    <script src="/assets/js/admin.js"></script>
+</body>
+</html>

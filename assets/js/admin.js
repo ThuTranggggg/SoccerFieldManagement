@@ -4,6 +4,11 @@ const validCredentials = {
     password: "123456"
 };
 
+// Hàm quay lại trang trước
+function goBack() {
+    window.history.back();
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const currentPage = window.location.pathname;
     if (currentPage.includes('login.html')) {
@@ -20,6 +25,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (currentPage.includes('saleStats.html')) {
             initializeSaleTable();
         }
+        if (currentPage.includes('mailStats.html')) {
+            initializeMailStats();
+        }
+        if (currentPage.includes('postStats.html')) {
+            initializePostStats();
+        }
     }
 
     // Dropdown menu
@@ -27,6 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const hamburgerIcon = document.getElementById('hamburgerIcon');
     const logoutOption = document.getElementById('logout-option');
     const mailboxOption = document.getElementById('mailbox-option');
+    const postOption = document.getElementById('post-option');
 
     // Mở/đóng menu khi click vào icon hamburger
     if (hamburgerIcon) {
@@ -49,90 +61,257 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Xử lý khi click vào option Hòm thư
     mailboxOption.addEventListener('click', function() {
-        const mailboxPopup = document.querySelector('.mailbox-popup');
-        const overlay = document.querySelector('.overlay');
-        const mailboxContent = document.querySelector('.mailbox-content');
-        
-        // Dữ liệu mẫu cho các thư
-        const mailItems = [
-            {
+        window.location.href = '/admin/mailStats.html';
+    });
+
+    // Xử lý khi click vào option Bài viết
+    postOption.addEventListener('click', function() {
+        window.location.href = '/admin/postStats.html';
+    });
+});
+
+// mailStats.html
+function initializeMailStats() {
+            // Dữ liệu mẫu - trong thực tế, dữ liệu này sẽ được lấy từ backend
+            const feedbackData = [
+                {
                 id: 1,
-                title: 'Đề xuất cải thiện chất lượng sân',
-                date: '20/03/2024',
-                preview: 'Tôi thấy sân bóng của quý khách rất tốt, tuy nhiên có một số đề xuất để cải thiện chất lượng...',
+                content: "Tôi rất hài lòng với dịch vụ của công ty. Nhân viên phục vụ tận tình, chu đáo và giải quyết vấn đề rất nhanh chóng. Tôi sẽ tiếp tục sử dụng dịch vụ trong tương lai và giới thiệu cho bạn bè.",
+                timestamp: new Date(2023, 10, 15, 9, 30),
                 isRead: false
             },
             {
                 id: 2,
-                title: 'Phản hồi về dịch vụ',
-                date: '19/03/2024',
-                preview: 'Cảm ơn quý khách đã phục vụ chúng tôi. Dịch vụ rất tốt và chuyên nghiệp...',
+                content: "Trang web cần cải thiện tính năng tìm kiếm.",
+                timestamp: new Date(2023, 10, 14, 15, 45),
                 isRead: true
             },
             {
                 id: 3,
-                title: 'Đề xuất thêm dịch vụ',
-                date: '18/03/2024',
-                preview: 'Tôi muốn đề xuất thêm một số dịch vụ mới để phục vụ khách hàng tốt hơn...',
+                content: "Sản phẩm chất lượng tốt nhưng giá hơi cao. Tôi mong công ty sẽ có nhiều chương trình khuyến mãi hơn trong tương lai. Ngoài ra, việc giao hàng cũng cần nhanh hơn một chút.",
+                timestamp: new Date(2023, 10, 10, 11, 20),
                 isRead: false
-            },
-            {
-                id: 4,
-                title: 'Phản hồi về nhân viên',
-                date: '17/03/2024',
-                preview: 'Nhân viên phục vụ rất nhiệt tình và chuyên nghiệp. Tôi rất hài lòng...',
-                isRead: true
             }
-        ];
-
-        // Xóa nội dung cũ
-        mailboxContent.innerHTML = '';
-
-        // Thêm các thư mới
-        mailItems.forEach(mail => {
-            const mailElement = document.createElement('div');
-            mailElement.className = `mail-item ${mail.isRead ? '' : 'unread'}`;
-            mailElement.innerHTML = `
-                <div class="mail-title">${mail.title}</div>
-                <div class="mail-date">${mail.date}</div>
-                <div class="mail-preview">${mail.preview}</div>
-            `;
-
-            // Xử lý click vào thư
-            mailElement.addEventListener('click', function() {
-                if (!mail.isRead) {
-                    mailElement.classList.remove('unread');
-                    mail.isRead = true;
+            ];
+    
+            const feedbackList = document.getElementById('feedback-list');
+            const template = document.getElementById('feedback-template');
+    
+            // Cập nhật thống kê
+            document.getElementById('total-count').textContent = feedbackData.length;
+            document.getElementById('unread-count').textContent = feedbackData.filter(item => !item.isRead).length;
+    
+            // Hiển thị danh sách thư góp ý
+            feedbackData.forEach(feedback => {
+                const feedbackNode = document.importNode(template.content, true);
+                const feedbackItem = feedbackNode.querySelector('.feedback-item');
+                
+            // Đánh dấu thư chưa đọc
+                if (!feedback.isRead) {
+                    feedbackItem.classList.add('unread');
                 }
-                // Ở đây có thể thêm code để hiển thị nội dung chi tiết của thư
-                alert('Nội dung thư: ' + mail.preview);
+                
+                // Định dạng thời gian
+                const timeElement = feedbackNode.querySelector('.feedback-time');
+                const formattedTime = formatDateTime(feedback.timestamp);
+                timeElement.textContent = formattedTime;
+                
+            // Nội dung thư
+            const textElement = feedbackNode.querySelector('.feedback-text');
+            const readMoreBtn = feedbackNode.querySelector('.read-more-btn');
+            
+            // Kiểm tra độ dài nội dung
+            if (feedback.content.length > 100) {
+                textElement.textContent = feedback.content.substring(0, 100) + '...';
+                readMoreBtn.style.display = 'block';
+                
+                // Xử lý sự kiện khi bấm "Xem thêm"
+                let isExpanded = false;
+                readMoreBtn.addEventListener('click', function() {
+                    if (isExpanded) {
+                        textElement.textContent = feedback.content.substring(0, 100) + '...';
+                        readMoreBtn.textContent = 'Thu gọn';
+                    } else {
+                        textElement.textContent = feedback.content;
+                        readMoreBtn.textContent = 'Thu gọn';
+                    }
+                    isExpanded = !isExpanded;
+                });
+            } else {
+                textElement.textContent = feedback.content;
+            }
+            
+            // Xử lý sự kiện khi bấm "Xóa"
+            const deleteBtn = feedbackNode.querySelector('.delete-btn');
+            deleteBtn.addEventListener('click', function() {
+                if (confirm('Bạn có chắc chắn muốn xóa thư góp ý này?')) {
+                    feedbackItem.remove();
+                    updateStatistics();
+                }
             });
-
-            mailboxContent.appendChild(mailElement);
-        });
-
-        // Hiển thị popup và overlay
-        mailboxPopup.style.display = 'flex';
-        overlay.style.display = 'block';
-
-        // Xử lý đóng popup
-        const closeButtons = mailboxPopup.querySelectorAll('.close-popup');
-        closeButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                mailboxPopup.style.display = 'none';
-                overlay.style.display = 'none';
+            
+            // Đánh dấu đã đọc khi click vào thư
+            feedbackItem.addEventListener('click', function(e) {
+                if (!e.target.classList.contains('delete-btn') && !e.target.classList.contains('read-more-btn')) {
+                    if (!feedback.isRead) {
+                        feedbackItem.classList.remove('unread');
+                        feedback.isRead = true;
+                        updateStatistics();
+                    }
+                }
             });
+                
+            feedbackList.appendChild(feedbackNode);
         });
+}
 
-        // Đóng popup khi click vào overlay
-        overlay.addEventListener('click', function() {
-            mailboxPopup.style.display = 'none';
-            overlay.style.display = 'none';
+// Hàm cập nhật thống kê
+function updateStatistics() {
+    const totalItems = document.querySelectorAll('.feedback-item').length;
+    const unreadItems = document.querySelectorAll('.feedback-item.unread').length;
+    
+    document.getElementById('total-count').textContent = totalItems;
+    document.getElementById('unread-count').textContent = unreadItems;
+}
+
+// Hàm định dạng thời gian
+function formatDateTime(date) {
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+        
+    return `${hours}:${minutes}, ${day}/${month}/${year}`;
+}
+
+// postStats.html
+function initializePostStats() {
+    const postsData = [
+        {
+            id: 1,
+            teamName: "FC Sunrise",
+            memberCount: 8,
+            genderFormat: "Nam",
+            skillLevel: "Trung bình",
+            registrationTime: "19:00 - 21:00",
+            court: "A",
+            phoneNumber: "0901234567",
+            postPassword: "sunrise123",
+            description: "Đội bóng mới thành lập, tìm kiếm đối thủ để giao lưu và học hỏi. Lịch tập hàng tuần vào thứ 3, thứ 5. Mong muốn tìm đối thủ có trình độ tương đương.",
+            timestamp: new Date(2023, 10, 18, 14, 30)
+        },
+        {
+            id: 2,
+            teamName: "Victory Stars",
+            memberCount: 12,
+            genderFormat: "Nữ",
+            skillLevel: "Nâng cao",
+            registrationTime: "17:30 - 19:30",
+            court: "B",
+            phoneNumber: "0987654321",
+            postPassword: "victory456",
+            description: "Đội bóng nữ đã có 5 năm kinh nghiệm, từng tham gia nhiều giải đấu quận/huyện. Cần tìm đối tác đá giao hữu hàng tuần để duy trì phong độ. Đội có nhiều cầu thủ từng tham gia giải đấu cấp tỉnh và khu vực. Mục tiêu là tìm kiếm các đội có trình độ tương đương để trao đổi kinh nghiệm và nâng cao kỹ thuật.",
+            timestamp: new Date(2023, 10, 15, 10, 45)
+        },
+        {
+            id: 3,
+            teamName: "Young Eagles",
+            memberCount: 10,
+            genderFormat: "Nam",
+            skillLevel: "Cơ bản",
+            registrationTime: "20:00 - 22:00",
+            court: "D",
+            phoneNumber: "0912345678",
+            postPassword: "eagles789",
+            description: "Nhóm sinh viên năm nhất mới chơi bóng, đang tìm cơ hội giao lưu học hỏi từ các đội có kinh nghiệm. Lịch rảnh vào các buổi tối trong tuần và cả ngày cuối tuần. Các thành viên đều có tinh thần ham học hỏi và mong muốn phát triển kỹ năng. Đội đang trong quá trình xây dựng lối chơi và tìm kiếm các đối thủ phù hợp để rèn luyện.",
+            timestamp: new Date(2023, 10, 12, 8, 15)
+        }
+    ];
+
+    const postsList = document.getElementById('posts-list');
+    const template = document.getElementById('post-template');
+
+    // Cập nhật thống kê
+    document.getElementById('total-posts').textContent = postsData.length;
+
+    // Hiển thị danh sách bài đăng
+    postsData.forEach(post => {
+        const postNode = document.importNode(template.content, true);
+        const postItem = postNode.querySelector('.post-item');
+        
+        // Thiết lập thông tin thời gian
+        const timeElement = postNode.querySelector('.post-time');
+        const formattedTime = formatDateTime(post.timestamp);
+        timeElement.textContent = formattedTime;
+        
+        // Thiết lập thông tin đội
+        postNode.querySelector('.team-name').textContent = post.teamName;
+        postNode.querySelector('.member-count').textContent = post.memberCount;
+        postNode.querySelector('.gender-format').textContent = post.genderFormat;
+        postNode.querySelector('.skill-level').textContent = post.skillLevel;
+        postNode.querySelector('.registration-time').textContent = post.registrationTime;
+        postNode.querySelector('.court-type').textContent = post.court;
+        postNode.querySelector('.phone-number').textContent = post.phoneNumber;
+        postNode.querySelector('.post-password').textContent = post.postPassword;
+        
+        // Thiết lập mô tả và xử lý nút xem thêm
+        const descriptionText = postNode.querySelector('.description-text');
+        const readMoreBtn = postNode.querySelector('.read-more-btn');
+        
+        // Kiểm tra độ dài nội dung
+        if (post.description.length > 100) {
+            descriptionText.textContent = post.description.substring(0, 100) + '...';
+            readMoreBtn.style.display = 'block';
+            
+            // Xử lý sự kiện khi bấm "Xem thêm"
+            let isExpanded = false;
+            readMoreBtn.addEventListener('click', function() {
+                if (isExpanded) {
+                    descriptionText.textContent = post.description.substring(0, 100) + '...';
+                    readMoreBtn.textContent = 'Xem thêm';
+                } else {
+                    descriptionText.textContent = post.description;
+                    readMoreBtn.textContent = 'Thu gọn';
+                }
+                isExpanded = !isExpanded;
+            });
+        } else {
+            descriptionText.textContent = post.description;
+        }
+        
+        // Xử lý sự kiện khi bấm "Xóa"
+        const deleteBtn = postNode.querySelector('.delete-btn');
+        deleteBtn.addEventListener('click', function() {
+            if (confirm('Bạn có chắc chắn muốn xóa bài đăng này?')) {
+                postItem.remove();
+                updateStatistics();
+            }
         });
-
-        dropdownMenu.classList.remove('show');
+        
+        postsList.appendChild(postNode);
     });
-});
+}
+
+// Hàm cập nhật thống kê
+function updateStatistics() {
+    const totalItems = document.querySelectorAll('.feedback-item').length;
+    const unreadItems = document.querySelectorAll('.feedback-item.unread').length;
+    
+    document.getElementById('total-count').textContent = totalItems;
+    document.getElementById('unread-count').textContent = unreadItems;
+}
+
+// Hàm định dạng thời gian
+function formatDateTime(date) {
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+        
+    return `${hours}:${minutes}, ${day}/${month}/${year}`;
+}
 
 function loginSystem() {
     const loginForm = document.getElementById('loginForm');
@@ -433,8 +612,6 @@ function generateBookingTable() {
 function showBookingInfo(time, dayIndex, value) {
     const bookingInfo = document.querySelector('.booking-info');
     const bookingInfoHeader = bookingInfo.querySelector('.booking-info-header');
-    // const bookingInfoContent = document.createElement('div');
-    // bookingInfoContent.classList.add('booking-info-content');
     const overlay = document.querySelector('.overlay');
 
     // Lấy ngày từ dayIndex
@@ -449,18 +626,56 @@ function showBookingInfo(time, dayIndex, value) {
     // Cập nhật tiêu đề
     bookingInfoHeader.textContent = `${time} - ${formattedDate}`;
     
-    // Thêm thông tin booking theo số lượng
-    for (let i = 0; i < value; i++) {
-        const content = document.createElement('div');
-        content.classList.add('booking-info-content');
-        content.innerHTML = `
-            <p><strong>Sân:</strong> ${String.fromCharCode(65 + i)}</p>
-            <p><strong>Tên:</strong> Nguyễn Văn ${String.fromCharCode(65 + i)}</p>
-            <p><strong>SĐT:</strong> 090909090${i + 1}</p>
-            <p><strong>Giá:</strong> 400000 VNĐ</p>
-        `;
-        bookingInfo.appendChild(content);
+    // Tạo bảng
+    const table = document.createElement('table');
+    table.classList.add('booking-info-content');
+    
+    // Tạo header
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    const headers = ['Sân', 'Tên khách hàng', 'SĐT', 'Giá'];
+    
+    headers.forEach(header => {
+        const th = document.createElement('th');
+        th.textContent = header;
+        headerRow.appendChild(th);
+    });
+    
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+    
+    // Tạo tbody
+    const tbody = document.createElement('tbody');
+    
+    // Thêm 4 hàng
+    for (let i = 0; i < 4; i++) {
+        const row = document.createElement('tr');
+        for (let j = 0; j < 4; j++) {
+            const td = document.createElement('td');
+            // Nếu hàng hiện tại nhỏ hơn value, điền thông tin
+            if (i < value) {
+                switch(j) {
+                    case 0:
+                        td.textContent = String.fromCharCode(65 + i);
+                        break;
+                    case 1:
+                        td.textContent = `Nguyễn Văn ${String.fromCharCode(65 + i)}`;
+                        break;
+                    case 2:
+                        td.textContent = `090909090${i + 1}`;
+                        break;
+                    case 3:
+                        td.textContent = '400000 VNĐ';
+                        break;
+                }
+            }
+            row.appendChild(td);
+        }
+        tbody.appendChild(row);
     }
+    
+    table.appendChild(tbody);
+    bookingInfo.appendChild(table);
 
     // Xử lý đóng popup khi click vào nút close
     const closeButton = bookingInfo.querySelector('.close-popup');
@@ -468,6 +683,8 @@ function showBookingInfo(time, dayIndex, value) {
         closeButton.onclick = () => {
             bookingInfo.style.display = 'none';
             overlay.style.display = 'none';
+            // Xóa bảng cũ khi đóng
+            bookingInfo.removeChild(table);
         };
     }
 
@@ -476,6 +693,8 @@ function showBookingInfo(time, dayIndex, value) {
         if (event.target === overlay) {
             bookingInfo.style.display = 'none';
             overlay.style.display = 'none';
+            // Xóa bảng cũ khi đóng
+            bookingInfo.removeChild(table);
         }
     };
 }
